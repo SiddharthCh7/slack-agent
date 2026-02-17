@@ -1,0 +1,391 @@
+2026-02-03 23:47:33 | ERROR    | agent.config:validate:63 - Configuration error: GEMINI_API_KEY is required when LLM_PROVIDER is 'gemini'
+2026-02-03 23:47:33 | ERROR    | agent.config:validate:63 - Configuration error: LINKEDIN_ACCESS_TOKEN is required
+2026-02-03 23:47:33 | ERROR    | agent.config:validate:63 - Configuration error: GEMINI_API_KEY is required when LLM_PROVIDER is 'gemini'
+2026-02-03 23:47:33 | ERROR    | agent.config:validate:63 - Configuration error: LINKEDIN_ACCESS_TOKEN is required
+2026-02-03 23:49:12 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-03 23:49:12 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-03 23:49:12 | INFO     | __main__:run_agent:33 -    Time: 2026-02-03 23:49:12
+2026-02-03 23:49:12 | INFO     | __main__:run_agent:34 -    Mode: DRY RUN
+2026-02-03 23:49:12 | INFO     | __main__:run_agent:35 -    Max posts: 3
+2026-02-03 23:49:12 | INFO     | __main__:run_agent:36 -    Relevance threshold: 0.5
+2026-02-03 23:49:12 | INFO     | __main__:run_agent:37 - ============================================================
+2026-02-03 23:49:12 | INFO     | agent.nodes.feed_scanner:feed_scanner:31 - 🔍 Starting feed scan...
+2026-02-03 23:49:12 | INFO     | agent.linkedin_client:_get_api:38 - Initializing LinkedIn API client...
+2026-02-03 23:49:13 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Apache Iceberg': Access token expired
+2026-02-03 23:49:14 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Iceberg table format': Access token expired
+2026-02-03 23:49:15 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'data lakehouse': Access token expired
+2026-02-03 23:49:17 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Iceberg CDC': Access token expired
+2026-02-03 23:49:18 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'database replication Iceberg': Access token expired
+2026-02-03 23:49:19 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'EL pipeline': Access token expired
+2026-02-03 23:49:20 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Iceberg ingestion': Access token expired
+2026-02-03 23:49:21 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Change Data Capture': Access token expired
+2026-02-03 23:49:24 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'CDC pipeline': Access token expired
+2026-02-03 23:49:27 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'data replication': Access token expired
+2026-02-03 23:49:28 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Debezium alternatives': Access token expired
+2026-02-03 23:49:28 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'ETL vs ELT': Access token expired
+2026-02-03 23:49:30 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'open table format': Access token expired
+2026-02-03 23:49:31 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Parquet lakehouse': Access token expired
+2026-02-03 23:49:32 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Iceberg vs Delta Lake': Access token expired
+2026-02-03 23:49:33 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Hive to Iceberg migration': Access token expired
+2026-02-03 23:49:33 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'data engineering': Access token expired
+2026-02-03 23:49:36 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'data lake modernization': Access token expired
+2026-02-03 23:49:37 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'real-time analytics': Access token expired
+2026-02-03 23:49:38 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'streaming ingestion': Access token expired
+2026-02-03 23:49:40 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'PostgreSQL replication': Access token expired
+2026-02-03 23:49:41 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'MySQL CDC': Access token expired
+2026-02-03 23:49:41 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'MongoDB change streams': Access token expired
+2026-02-03 23:49:42 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Trino': Access token expired
+2026-02-03 23:49:43 | WARNING  | agent.linkedin_client:search_posts:101 - Error searching for keyword 'Apache Spark data lake': Access token expired
+2026-02-03 23:49:44 | WARNING  | agent.linkedin_client:search_posts:122 - Error searching for hashtag '#ApacheIceberg': Access token expired
+2026-02-03 23:49:44 | WARNING  | agent.linkedin_client:search_posts:122 - Error searching for hashtag '#DataLakehouse': Access token expired
+2026-02-03 23:49:45 | WARNING  | agent.linkedin_client:search_posts:122 - Error searching for hashtag '#DataEngineering': Access token expired
+2026-02-03 23:49:46 | WARNING  | agent.linkedin_client:search_posts:122 - Error searching for hashtag '#CDC': Access token expired
+2026-02-03 23:49:47 | WARNING  | agent.linkedin_client:search_posts:122 - Error searching for hashtag '#DataReplication': Access token expired
+2026-02-03 23:49:48 | WARNING  | agent.linkedin_client:search_posts:122 - Error searching for hashtag '#OpenSource': Access token expired
+2026-02-03 23:49:48 | WARNING  | agent.linkedin_client:search_posts:122 - Error searching for hashtag '#DataLake': Access token expired
+2026-02-03 23:49:49 | WARNING  | agent.linkedin_client:search_posts:122 - Error searching for hashtag '#Iceberg': Access token expired
+2026-02-03 23:49:49 | INFO     | agent.linkedin_client:search_posts:124 - Found 0 posts matching keywords/hashtags
+2026-02-03 23:49:49 | INFO     | agent.nodes.feed_scanner:feed_scanner:42 - Retrieved 0 posts from LinkedIn
+2026-02-03 23:49:49 | INFO     | agent.nodes.feed_scanner:feed_scanner:61 - After filtering: 0 posts to evaluate
+2026-02-03 23:49:49 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-03 23:49:49 | INFO     | agent.nodes.relevance_filter:relevance_filter:33 - No posts to filter
+2026-02-03 23:49:49 | INFO     | agent.nodes.comment_drafter:comment_drafter:29 - ✍️ Drafting comment...
+2026-02-03 23:49:49 | WARNING  | agent.nodes.comment_drafter:comment_drafter:34 - No post to draft comment for
+2026-02-03 23:49:49 | INFO     | agent.nodes.post_comment:post_comment:29 - 📤 Posting comment to LinkedIn...
+2026-02-03 23:49:49 | WARNING  | agent.nodes.post_comment:post_comment:34 - No comment to post
+2026-02-03 23:49:49 | INFO     | agent.nodes.fallback_handler:fallback_handler:27 - 🔧 Fallback handler processing failure...
+2026-02-03 23:49:49 | ERROR    | agent.nodes.fallback_handler:fallback_handler:37 - Comment posting failed for : No draft comment available
+2026-02-03 23:49:49 | INFO     | agent.nodes.fallback_handler:fallback_handler:72 - 📊 Error summary: 0 errors, 0 failed posts
+2026-02-03 23:49:49 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:28 - 📋 Logging result and managing cooldown...
+2026-02-03 23:49:49 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:65 - Comment ❌ failed | Post:  | Topic: unknown | Score: 0.00
+2026-02-03 23:49:49 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:85 - ✅ All posts processed for this run
+2026-02-03 23:49:49 | INFO     | agent.graph:should_continue_processing:55 - 🏁 Workflow complete
+2026-02-03 23:49:49 | INFO     | __main__:run_agent:60 - ============================================================
+2026-02-03 23:49:49 | INFO     | __main__:run_agent:61 - 📊 Run Complete - Summary
+2026-02-03 23:49:49 | INFO     | __main__:run_agent:62 -    Posts scanned: 0
+2026-02-03 23:49:49 | INFO     | __main__:run_agent:63 -    Posts qualified: 0
+2026-02-03 23:49:49 | INFO     | __main__:run_agent:64 -    Comments posted: 0
+2026-02-03 23:49:49 | INFO     | __main__:run_agent:65 -    Errors: 0
+2026-02-03 23:49:49 | INFO     | __main__:run_agent:66 -    Duration: 37.6s
+2026-02-03 23:49:49 | INFO     | __main__:run_agent:67 - ============================================================
+2026-02-03 23:59:57 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-03 23:59:57 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-03 23:59:57 | INFO     | __main__:run_agent:33 -    Time: 2026-02-03 23:59:57
+2026-02-03 23:59:57 | INFO     | __main__:run_agent:34 -    Mode: DRY RUN
+2026-02-03 23:59:57 | INFO     | __main__:run_agent:35 -    Max posts: 3
+2026-02-03 23:59:57 | INFO     | __main__:run_agent:36 -    Relevance threshold: 0.5
+2026-02-03 23:59:57 | INFO     | __main__:run_agent:37 - ============================================================
+2026-02-03 23:59:57 | INFO     | agent.nodes.feed_scanner:feed_scanner:31 - 🔍 Starting feed scan...
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:_get_api:36 - Using Mock LinkedIn API (dry-run mode)
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Apache Iceberg
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Iceberg table format
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: data lakehouse
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Iceberg CDC
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: database replication Iceberg
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: EL pipeline
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Iceberg ingestion
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Change Data Capture
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: CDC pipeline
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: data replication
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Debezium alternatives
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: ETL vs ELT
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: open table format
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Parquet lakehouse
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Iceberg vs Delta Lake
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Hive to Iceberg migration
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: data engineering
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: data lake modernization
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: real-time analytics
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: streaming ingestion
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: PostgreSQL replication
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: MySQL CDC
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: MongoDB change streams
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Trino
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: Apache Spark data lake
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: #ApacheIceberg
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: #DataLakehouse
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: #DataEngineering
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: #CDC
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: #DataReplication
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: #OpenSource
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: #DataLake
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:307 - [MOCK] Searching for posts with query: #Iceberg
+2026-02-03 23:59:57 | INFO     | agent.linkedin_client:search_posts:129 - Found 3 posts matching keywords/hashtags
+2026-02-03 23:59:57 | INFO     | agent.nodes.feed_scanner:feed_scanner:42 - Retrieved 3 posts from LinkedIn
+2026-02-03 23:59:57 | INFO     | agent.nodes.feed_scanner:feed_scanner:61 - After filtering: 3 posts to evaluate
+2026-02-03 23:59:57 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-04 00:00:35 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 24.660237342s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '24s'}]}}
+2026-02-04 00:01:09 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 50.223791864s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '50s'}]}}
+2026-02-04 01:04:47 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-04 01:04:47 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-04 01:04:47 | INFO     | __main__:run_agent:35 -    Time: 2026-02-04 01:04:47
+2026-02-04 01:04:47 | INFO     | __main__:run_agent:36 -    Mode: DRY RUN
+2026-02-04 01:04:47 | INFO     | __main__:run_agent:37 -    Max posts: 3
+2026-02-04 01:04:47 | INFO     | __main__:run_agent:38 -    Relevance threshold: 0.5
+2026-02-04 01:04:47 | INFO     | __main__:run_agent:40 - ============================================================
+2026-02-04 01:04:47 | INFO     | agent.nodes.feed_scanner:feed_scanner:31 - 🔍 Starting feed scan...
+2026-02-04 01:04:47 | INFO     | agent.x_client:search_tweets:87 - Using Mock X API (dry-run mode)
+2026-02-04 01:04:47 | INFO     | agent.x_client:search_tweets:251 - [MOCK] Searching for tweets...
+2026-02-04 01:04:47 | INFO     | agent.nodes.feed_scanner:feed_scanner:44 - Retrieved 3 tweets from X
+2026-02-04 01:04:47 | INFO     | agent.nodes.feed_scanner:feed_scanner:64 - After filtering: 3 posts to evaluate
+2026-02-04 01:04:47 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-04 01:04:48 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-04 01:04:48 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-04 01:04:49 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-04 01:04:49 | INFO     | agent.nodes.relevance_filter:relevance_filter:86 - Filtered to 0 relevant posts
+2026-02-04 01:04:49 | INFO     | agent.nodes.comment_drafter:comment_drafter:29 - ✍️ Drafting comment...
+2026-02-04 01:04:49 | WARNING  | agent.nodes.comment_drafter:comment_drafter:34 - No post to draft comment for
+2026-02-04 01:04:49 | INFO     | agent.nodes.post_comment:post_comment:29 - 📤 Posting reply to X...
+2026-02-04 01:04:49 | WARNING  | agent.nodes.post_comment:post_comment:34 - No comment to post
+2026-02-04 01:04:49 | INFO     | agent.nodes.fallback_handler:fallback_handler:27 - 🔧 Fallback handler processing failure...
+2026-02-04 01:04:49 | ERROR    | agent.nodes.fallback_handler:fallback_handler:37 - Comment posting failed for : No draft comment available
+2026-02-04 01:04:49 | INFO     | agent.nodes.fallback_handler:fallback_handler:72 - 📊 Error summary: 0 errors, 0 failed posts
+2026-02-04 01:04:49 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:28 - 📋 Logging result and managing cooldown...
+2026-02-04 01:04:49 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:65 - Comment ❌ failed | Post:  | Topic: unknown | Score: 0.00
+2026-02-04 01:04:49 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:85 - ✅ All posts processed for this run
+2026-02-04 01:04:49 | INFO     | agent.graph:should_continue_processing:55 - 🏁 Workflow complete
+2026-02-04 01:04:49 | INFO     | __main__:run_agent:63 - ============================================================
+2026-02-04 01:04:49 | INFO     | __main__:run_agent:64 - 📊 Run Complete - Summary
+2026-02-04 01:04:49 | INFO     | __main__:run_agent:65 -    Posts scanned: 3
+2026-02-04 01:04:49 | INFO     | __main__:run_agent:66 -    Posts qualified: 0
+2026-02-04 01:04:49 | INFO     | __main__:run_agent:67 -    Comments posted: 0
+2026-02-04 01:04:49 | INFO     | __main__:run_agent:68 -    Errors: 0
+2026-02-04 01:04:49 | INFO     | __main__:run_agent:69 -    Duration: 1.3s
+2026-02-04 01:04:49 | INFO     | __main__:run_agent:70 - ============================================================
+2026-02-04 01:23:10 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-04 01:23:10 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-04 01:23:10 | INFO     | __main__:run_agent:35 -    Time: 2026-02-04 01:23:10
+2026-02-04 01:23:10 | INFO     | __main__:run_agent:36 -    Mode: DRY RUN
+2026-02-04 01:23:10 | INFO     | __main__:run_agent:37 -    Max posts: 3
+2026-02-04 01:23:10 | INFO     | __main__:run_agent:38 -    Relevance threshold: 0.5
+2026-02-04 01:23:10 | INFO     | __main__:run_agent:40 - ============================================================
+2026-02-04 01:23:10 | INFO     | agent.nodes.feed_scanner:feed_scanner:33 - 🔍 Starting feed scan...
+2026-02-04 01:23:10 | INFO     | agent.x_client:search_tweets:87 - Using Mock X API (dry-run mode)
+2026-02-04 01:23:10 | INFO     | agent.x_client:search_tweets:738 - [MOCK] Searching for tweets...
+2026-02-04 01:23:10 | INFO     | agent.nodes.feed_scanner:dedupe_add:48 -    [Search] Added 3 tweets
+2026-02-04 01:23:10 | INFO     | agent.x_client:get_trends:470 - [DRY RUN] Would fetch trends for WOEID 1
+2026-02-04 01:23:10 | INFO     | agent.x_client:get_trends:804 - [MOCK] Fetching trends...
+2026-02-04 01:23:10 | INFO     | agent.nodes.feed_scanner:feed_scanner:66 -    Found 3 relevant trends: ['#ApacheIceberg', '#DataEngineering', '#DataLakehouse']
+2026-02-04 01:23:10 | INFO     | agent.x_client:get_mentions:566 - [DRY RUN] Would fetch mentions
+2026-02-04 01:23:10 | INFO     | agent.x_client:get_mentions:815 - [MOCK] Fetching mentions...
+2026-02-04 01:23:10 | INFO     | agent.nodes.feed_scanner:dedupe_add:48 -    [Mentions] Added 1 tweets
+2026-02-04 01:23:10 | INFO     | agent.nodes.feed_scanner:feed_scanner:101 - 📥 Total: 4 tweets from all sources
+2026-02-04 01:23:10 | INFO     | agent.nodes.feed_scanner:feed_scanner:121 - After filtering: 4 posts to evaluate
+2026-02-04 01:23:10 | INFO     | agent.nodes.feed_scanner:feed_scanner:130 - Limited to 3 posts for this run
+2026-02-04 01:23:10 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-04 01:23:46 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 13.624194116s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '13s'}]}}
+2026-02-04 01:24:23 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 36.709397539s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '36s'}]}}
+2026-02-05 23:49:13 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-05 23:49:13 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-05 23:49:13 | INFO     | __main__:run_agent:35 -    Time: 2026-02-05 23:49:13
+2026-02-05 23:49:13 | INFO     | __main__:run_agent:36 -    Mode: DRY RUN
+2026-02-05 23:49:13 | INFO     | __main__:run_agent:37 -    Max posts: 3
+2026-02-05 23:49:13 | INFO     | __main__:run_agent:38 -    Relevance threshold: 0.5
+2026-02-05 23:49:13 | INFO     | __main__:run_agent:40 - ============================================================
+2026-02-05 23:49:13 | INFO     | agent.nodes.feed_scanner:feed_scanner:33 - 🔍 Starting feed scan...
+2026-02-05 23:49:13 | INFO     | agent.x_client:search_tweets:87 - Using Mock X API (dry-run mode)
+2026-02-05 23:49:13 | INFO     | agent.x_client:search_tweets:738 - [MOCK] Searching for tweets...
+2026-02-05 23:49:13 | INFO     | agent.nodes.feed_scanner:dedupe_add:48 -    [Search] Added 3 tweets
+2026-02-05 23:49:13 | INFO     | agent.x_client:get_trends:470 - [DRY RUN] Would fetch trends for WOEID 1
+2026-02-05 23:49:13 | INFO     | agent.x_client:get_trends:804 - [MOCK] Fetching trends...
+2026-02-05 23:49:13 | INFO     | agent.nodes.feed_scanner:feed_scanner:66 -    Found 3 relevant trends: ['#ApacheIceberg', '#DataEngineering', '#DataLakehouse']
+2026-02-05 23:49:13 | INFO     | agent.x_client:get_mentions:566 - [DRY RUN] Would fetch mentions
+2026-02-05 23:49:13 | INFO     | agent.x_client:get_mentions:815 - [MOCK] Fetching mentions...
+2026-02-05 23:49:13 | INFO     | agent.nodes.feed_scanner:dedupe_add:48 -    [Mentions] Added 1 tweets
+2026-02-05 23:49:13 | INFO     | agent.nodes.feed_scanner:feed_scanner:101 - 📥 Total: 4 tweets from all sources
+2026-02-05 23:49:13 | INFO     | agent.nodes.feed_scanner:feed_scanner:121 - After filtering: 4 posts to evaluate
+2026-02-05 23:49:13 | INFO     | agent.nodes.feed_scanner:feed_scanner:130 - Limited to 3 posts for this run
+2026-02-05 23:49:13 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-05 23:49:48 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 11.373277705s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '11s'}]}}
+2026-02-05 23:50:23 | ERROR    | agent.llm:classify_post_relevance:95 - Error during classification: Error calling model 'gemini-2.0-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 36.348608975s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '36s'}]}}
+2026-02-05 23:50:30 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-05 23:50:30 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-05 23:50:30 | INFO     | __main__:run_agent:35 -    Time: 2026-02-05 23:50:30
+2026-02-05 23:50:30 | INFO     | __main__:run_agent:36 -    Mode: DRY RUN
+2026-02-05 23:50:30 | INFO     | __main__:run_agent:37 -    Max posts: 3
+2026-02-05 23:50:30 | INFO     | __main__:run_agent:38 -    Relevance threshold: 0.5
+2026-02-05 23:50:30 | INFO     | __main__:run_agent:40 - ============================================================
+2026-02-05 23:50:30 | INFO     | agent.nodes.feed_scanner:feed_scanner:33 - 🔍 Starting feed scan...
+2026-02-05 23:50:30 | INFO     | agent.x_client:search_tweets:87 - Using Mock X API (dry-run mode)
+2026-02-05 23:50:30 | INFO     | agent.x_client:search_tweets:738 - [MOCK] Searching for tweets...
+2026-02-05 23:50:30 | INFO     | agent.nodes.feed_scanner:dedupe_add:48 -    [Search] Added 3 tweets
+2026-02-05 23:50:30 | INFO     | agent.x_client:get_trends:470 - [DRY RUN] Would fetch trends for WOEID 1
+2026-02-05 23:50:30 | INFO     | agent.x_client:get_trends:804 - [MOCK] Fetching trends...
+2026-02-05 23:50:30 | INFO     | agent.nodes.feed_scanner:feed_scanner:66 -    Found 3 relevant trends: ['#ApacheIceberg', '#DataEngineering', '#DataLakehouse']
+2026-02-05 23:50:30 | INFO     | agent.x_client:get_mentions:566 - [DRY RUN] Would fetch mentions
+2026-02-05 23:50:30 | INFO     | agent.x_client:get_mentions:815 - [MOCK] Fetching mentions...
+2026-02-05 23:50:30 | INFO     | agent.nodes.feed_scanner:dedupe_add:48 -    [Mentions] Added 1 tweets
+2026-02-05 23:50:30 | INFO     | agent.nodes.feed_scanner:feed_scanner:101 - 📥 Total: 4 tweets from all sources
+2026-02-05 23:50:30 | INFO     | agent.nodes.feed_scanner:feed_scanner:121 - After filtering: 4 posts to evaluate
+2026-02-05 23:50:30 | INFO     | agent.nodes.feed_scanner:feed_scanner:130 - Limited to 3 posts for this run
+2026-02-05 23:50:30 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-05 23:50:33 | INFO     | agent.nodes.relevance_filter:relevance_filter:68 - ✅ Post qualifies: mock-tweet-001 (score=0.90, topic=apache_iceberg)
+2026-02-05 23:50:37 | INFO     | agent.nodes.relevance_filter:relevance_filter:68 - ✅ Post qualifies: mock-tweet-002 (score=0.98, topic=cdc)
+2026-02-05 23:50:40 | INFO     | agent.nodes.relevance_filter:relevance_filter:68 - ✅ Post qualifies: mock-tweet-003 (score=0.95, topic=etl_elt)
+2026-02-05 23:50:40 | INFO     | agent.nodes.relevance_filter:relevance_filter:86 - Filtered to 3 relevant posts
+2026-02-05 23:50:40 | INFO     | agent.nodes.engagement_router:engagement_router:28 - 🔀 Routing engagement action...
+2026-02-05 23:50:40 | INFO     | agent.nodes.engagement_router:engagement_router:56 - ⭐ High relevance (score: 0.98) → quote_tweet
+2026-02-05 23:50:40 | INFO     | agent.nodes.quote_handler:quote_drafter:26 - 💬 Drafting quote tweet...
+2026-02-05 23:50:40 | INFO     | agent.nodes.quote_handler:quote_drafter:48 - 🏃 Dry run mode - using mock quote
+2026-02-05 23:50:40 | INFO     | agent.nodes.quote_handler:post_quote:99 - 📤 Posting quote tweet...
+2026-02-05 23:50:40 | INFO     | agent.x_client:quote_tweet:381 - [DRY RUN] Would quote tweet mock-tweet-002
+2026-02-05 23:50:40 | INFO     | agent.x_client:quote_tweet:382 - [DRY RUN] Quote: [MOCK QUOTE] Great insights on cdc! 🚀
+2026-02-05 23:50:40 | INFO     | agent.nodes.quote_handler:post_quote:121 - ✅ Quote tweet posted! ID: dry-run-quote-1770315640
+2026-02-05 23:50:40 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:28 - 📋 Logging result and managing cooldown...
+2026-02-05 23:50:40 | ERROR    | agent.nodes.log_and_cooldown:log_and_cooldown:55 - Failed to record comment in database: 'CommentResult' object has no attribute 'linkedin_comment_id'
+2026-02-05 23:50:40 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:62 - ⏰ Next comment allowed at: 00:20:40
+2026-02-05 23:50:40 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:65 - Comment ✅ succeeded | Post: mock-tweet-002 | Topic: cdc | Score: 0.98
+2026-02-05 23:50:40 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:81 - 📍 Moving to next post (2/3)
+2026-02-05 23:50:40 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:90 - ⏸️ Stopping: Cooldown active, wait 30.0 minutes
+2026-02-05 23:50:40 | INFO     | agent.graph:should_continue_processing:84 - 🏁 Workflow complete
+2026-02-05 23:50:40 | INFO     | __main__:run_agent:63 - ============================================================
+2026-02-05 23:50:40 | INFO     | __main__:run_agent:64 - 📊 Run Complete - Summary
+2026-02-05 23:50:40 | INFO     | __main__:run_agent:65 -    Posts scanned: 3
+2026-02-05 23:50:40 | INFO     | __main__:run_agent:66 -    Posts qualified: 3
+2026-02-05 23:50:40 | INFO     | __main__:run_agent:67 -    Comments posted: 2
+2026-02-05 23:50:40 | INFO     | __main__:run_agent:68 -    Errors: 0
+2026-02-05 23:50:40 | INFO     | __main__:run_agent:69 -    Duration: 10.4s
+2026-02-05 23:50:40 | INFO     | __main__:run_agent:70 - ============================================================
+2026-02-05 23:51:25 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-05 23:51:25 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-05 23:51:25 | INFO     | __main__:run_agent:35 -    Time: 2026-02-05 23:51:25
+2026-02-05 23:51:25 | INFO     | __main__:run_agent:36 -    Mode: LIVE
+2026-02-05 23:51:25 | INFO     | __main__:run_agent:37 -    Max posts: 3
+2026-02-05 23:51:25 | INFO     | __main__:run_agent:38 -    Relevance threshold: 0.5
+2026-02-05 23:51:25 | INFO     | __main__:run_agent:40 - ============================================================
+2026-02-05 23:51:25 | INFO     | agent.nodes.feed_scanner:feed_scanner:33 - 🔍 Starting feed scan...
+2026-02-05 23:51:27 | ERROR    | agent.x_client:search_tweets:170 - X API request failed: 400 Client Error: Bad Request for url: https://api.twitter.com/2/tweets/search/recent?query=%22Apache+Iceberg%22+OR+%22Iceberg+table+format%22+OR+%22data+lakehouse%22+OR+%22Iceberg+CDC%22+OR+%22database+replication+Iceberg%22+OR+%23ApacheIceberg+OR+%23DataLakehouse+OR+%23DataEngineering+-is%3Aretweet+lang%3Aen&max_results=6&tweet.fields=created_at%2Cauthor_id%2Ctext%2Centities&user.fields=name%2Cusername&expansions=author_id
+2026-02-05 23:51:27 | INFO     | agent.x_client:search_tweets:173 - Found 0 tweets matching keywords/hashtags
+2026-02-05 23:51:27 | ERROR    | agent.x_client:get_trends:493 - Failed to get trends: 403 Client Error: Forbidden for url: https://api.twitter.com/2/trends/by/woeid/1
+2026-02-05 23:51:27 | INFO     | agent.nodes.feed_scanner:feed_scanner:101 - 📥 Total: 0 tweets from all sources
+2026-02-05 23:51:27 | INFO     | agent.nodes.feed_scanner:feed_scanner:121 - After filtering: 0 posts to evaluate
+2026-02-05 23:51:27 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-05 23:51:27 | INFO     | agent.nodes.relevance_filter:relevance_filter:34 - No posts to filter
+2026-02-05 23:51:27 | INFO     | agent.nodes.engagement_router:engagement_router:28 - 🔀 Routing engagement action...
+2026-02-05 23:51:27 | WARNING  | agent.nodes.engagement_router:engagement_router:34 - No post to route
+2026-02-05 23:51:27 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:28 - 📋 Logging result and managing cooldown...
+2026-02-05 23:51:27 | WARNING  | agent.nodes.log_and_cooldown:log_and_cooldown:35 - No comment result to log
+2026-02-05 23:51:27 | INFO     | agent.graph:should_continue_processing:84 - 🏁 Workflow complete
+2026-02-05 23:51:27 | INFO     | __main__:run_agent:63 - ============================================================
+2026-02-05 23:51:27 | INFO     | __main__:run_agent:64 - 📊 Run Complete - Summary
+2026-02-05 23:51:27 | INFO     | __main__:run_agent:65 -    Posts scanned: 0
+2026-02-05 23:51:27 | INFO     | __main__:run_agent:66 -    Posts qualified: 0
+2026-02-05 23:51:27 | INFO     | __main__:run_agent:67 -    Comments posted: 0
+2026-02-05 23:51:27 | INFO     | __main__:run_agent:68 -    Errors: 0
+2026-02-05 23:51:27 | INFO     | __main__:run_agent:69 -    Duration: 2.1s
+2026-02-05 23:51:27 | INFO     | __main__:run_agent:70 - ============================================================
+2026-02-05 23:51:56 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-05 23:51:56 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-05 23:51:56 | INFO     | __main__:run_agent:35 -    Time: 2026-02-05 23:51:56
+2026-02-05 23:51:56 | INFO     | __main__:run_agent:36 -    Mode: LIVE
+2026-02-05 23:51:56 | INFO     | __main__:run_agent:37 -    Max posts: 3
+2026-02-05 23:51:56 | INFO     | __main__:run_agent:38 -    Relevance threshold: 0.5
+2026-02-05 23:51:56 | INFO     | __main__:run_agent:40 - ============================================================
+2026-02-05 23:51:56 | INFO     | agent.nodes.feed_scanner:feed_scanner:33 - 🔍 Starting feed scan...
+2026-02-05 23:51:57 | WARNING  | agent.x_client:search_tweets:120 - X API rate limit hit
+2026-02-05 23:51:57 | ERROR    | agent.x_client:get_trends:493 - Failed to get trends: 403 Client Error: Forbidden for url: https://api.twitter.com/2/trends/by/woeid/1
+2026-02-05 23:51:57 | INFO     | agent.nodes.feed_scanner:feed_scanner:101 - 📥 Total: 0 tweets from all sources
+2026-02-05 23:51:57 | INFO     | agent.nodes.feed_scanner:feed_scanner:121 - After filtering: 0 posts to evaluate
+2026-02-05 23:51:57 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-05 23:51:57 | INFO     | agent.nodes.relevance_filter:relevance_filter:34 - No posts to filter
+2026-02-05 23:51:57 | INFO     | agent.nodes.engagement_router:engagement_router:28 - 🔀 Routing engagement action...
+2026-02-05 23:51:57 | WARNING  | agent.nodes.engagement_router:engagement_router:34 - No post to route
+2026-02-05 23:51:57 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:28 - 📋 Logging result and managing cooldown...
+2026-02-05 23:51:57 | WARNING  | agent.nodes.log_and_cooldown:log_and_cooldown:35 - No comment result to log
+2026-02-05 23:51:57 | INFO     | agent.graph:should_continue_processing:84 - 🏁 Workflow complete
+2026-02-05 23:51:57 | INFO     | __main__:run_agent:63 - ============================================================
+2026-02-05 23:51:57 | INFO     | __main__:run_agent:64 - 📊 Run Complete - Summary
+2026-02-05 23:51:57 | INFO     | __main__:run_agent:65 -    Posts scanned: 0
+2026-02-05 23:51:57 | INFO     | __main__:run_agent:66 -    Posts qualified: 0
+2026-02-05 23:51:57 | INFO     | __main__:run_agent:67 -    Comments posted: 0
+2026-02-05 23:51:57 | INFO     | __main__:run_agent:68 -    Errors: 0
+2026-02-05 23:51:57 | INFO     | __main__:run_agent:69 -    Duration: 1.0s
+2026-02-05 23:51:57 | INFO     | __main__:run_agent:70 - ============================================================
+2026-02-05 23:53:54 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-05 23:53:54 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-05 23:53:54 | INFO     | __main__:run_agent:35 -    Time: 2026-02-05 23:53:54
+2026-02-05 23:53:54 | INFO     | __main__:run_agent:36 -    Mode: LIVE
+2026-02-05 23:53:54 | INFO     | __main__:run_agent:37 -    Max posts: 3
+2026-02-05 23:53:54 | INFO     | __main__:run_agent:38 -    Relevance threshold: 0.5
+2026-02-05 23:53:54 | INFO     | __main__:run_agent:40 - ============================================================
+2026-02-05 23:53:54 | INFO     | agent.nodes.feed_scanner:feed_scanner:33 - 🔍 Starting feed scan...
+2026-02-05 23:53:54 | INFO     | agent.x_client:search_tweets:106 - Search query: #ApacheIceberg OR #DataLakehouse -is:retweet lang:en
+2026-02-05 23:53:55 | WARNING  | agent.x_client:search_tweets:125 - X API rate limit hit
+2026-02-05 23:53:56 | INFO     | agent.nodes.feed_scanner:feed_scanner:101 - 📥 Total: 0 tweets from all sources
+2026-02-05 23:53:56 | INFO     | agent.nodes.feed_scanner:feed_scanner:121 - After filtering: 0 posts to evaluate
+2026-02-05 23:53:56 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-05 23:53:56 | INFO     | agent.nodes.relevance_filter:relevance_filter:34 - No posts to filter
+2026-02-05 23:53:56 | INFO     | agent.nodes.engagement_router:engagement_router:28 - 🔀 Routing engagement action...
+2026-02-05 23:53:56 | WARNING  | agent.nodes.engagement_router:engagement_router:34 - No post to route
+2026-02-05 23:53:56 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:28 - 📋 Logging result and managing cooldown...
+2026-02-05 23:53:56 | WARNING  | agent.nodes.log_and_cooldown:log_and_cooldown:35 - No comment result to log
+2026-02-05 23:53:56 | INFO     | agent.graph:should_continue_processing:84 - 🏁 Workflow complete
+2026-02-05 23:53:56 | INFO     | __main__:run_agent:63 - ============================================================
+2026-02-05 23:53:56 | INFO     | __main__:run_agent:64 - 📊 Run Complete - Summary
+2026-02-05 23:53:56 | INFO     | __main__:run_agent:65 -    Posts scanned: 0
+2026-02-05 23:53:56 | INFO     | __main__:run_agent:66 -    Posts qualified: 0
+2026-02-05 23:53:56 | INFO     | __main__:run_agent:67 -    Comments posted: 0
+2026-02-05 23:53:56 | INFO     | __main__:run_agent:68 -    Errors: 0
+2026-02-05 23:53:56 | INFO     | __main__:run_agent:69 -    Duration: 1.7s
+2026-02-05 23:53:56 | INFO     | __main__:run_agent:70 - ============================================================
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:31 - ============================================================
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:32 - 🚀 Starting OLake LinkedIn Marketing Agent
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:35 -    Time: 2026-02-05 23:57:35
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:36 -    Mode: LIVE
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:37 -    Max posts: 3
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:38 -    Relevance threshold: 0.5
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:40 - ============================================================
+2026-02-05 23:57:35 | INFO     | agent.nodes.feed_scanner:feed_scanner:33 - 🔍 Starting feed scan...
+2026-02-05 23:57:35 | INFO     | agent.x_client:search_tweets:106 - Search query: #ApacheIceberg OR #DataLakehouse -is:retweet lang:en
+2026-02-05 23:57:35 | WARNING  | agent.x_client:search_tweets:125 - X API rate limit hit
+2026-02-05 23:57:35 | INFO     | agent.nodes.feed_scanner:feed_scanner:101 - 📥 Total: 0 tweets from all sources
+2026-02-05 23:57:35 | INFO     | agent.nodes.feed_scanner:feed_scanner:121 - After filtering: 0 posts to evaluate
+2026-02-05 23:57:35 | INFO     | agent.nodes.relevance_filter:relevance_filter:28 - 📊 Filtering posts by relevance...
+2026-02-05 23:57:35 | INFO     | agent.nodes.relevance_filter:relevance_filter:34 - No posts to filter
+2026-02-05 23:57:35 | INFO     | agent.nodes.engagement_router:engagement_router:28 - 🔀 Routing engagement action...
+2026-02-05 23:57:35 | WARNING  | agent.nodes.engagement_router:engagement_router:34 - No post to route
+2026-02-05 23:57:35 | INFO     | agent.nodes.log_and_cooldown:log_and_cooldown:28 - 📋 Logging result and managing cooldown...
+2026-02-05 23:57:35 | WARNING  | agent.nodes.log_and_cooldown:log_and_cooldown:35 - No comment result to log
+2026-02-05 23:57:35 | INFO     | agent.graph:should_continue_processing:84 - 🏁 Workflow complete
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:63 - ============================================================
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:64 - 📊 Run Complete - Summary
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:65 -    Posts scanned: 0
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:66 -    Posts qualified: 0
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:67 -    Comments posted: 0
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:68 -    Errors: 0
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:69 -    Duration: 0.6s
+2026-02-05 23:57:35 | INFO     | __main__:run_agent:70 - ============================================================
+2026-02-15 22:25:57,271 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-15 22:32:44,932 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-15 22:32:44,947 | slack_agent | INFO | Database initialized successfully
+2026-02-15 22:32:44,947 | slack_agent | INFO | Creating agent graph...
+2026-02-15 22:32:44,949 | slack_agent | INFO | Agent graph created successfully
+2026-02-15 22:32:44,966 | slack_agent | INFO | ============================================================
+2026-02-15 22:32:44,966 | slack_agent | INFO | OLake Slack Community Agent Starting
+2026-02-15 22:32:44,966 | slack_agent | INFO | ============================================================
+2026-02-15 22:32:44,966 | slack_agent | INFO | Webhook URL: http://localhost:3000/slack/events
+2026-02-15 22:32:44,966 | slack_agent | INFO | Health Check: http://localhost:3000/health
+2026-02-15 22:32:44,966 | slack_agent | INFO | Stats API: http://localhost:3000/stats
+2026-02-15 22:32:44,966 | slack_agent | INFO | 
+2026-02-15 22:32:44,966 | slack_agent | INFO | 💡 For local development, use ngrok:
+2026-02-15 22:32:44,966 | slack_agent | INFO |    ngrok http 3000
+2026-02-15 22:32:44,966 | slack_agent | INFO |    Then set Request URL in Slack to:
+2026-02-15 22:32:44,966 | slack_agent | INFO |    https://your-ngrok-url.ngrok.io/slack/events
+2026-02-15 22:32:44,966 | slack_agent | INFO | ============================================================
+2026-02-15 22:37:50,874 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-15 22:37:50,885 | slack_agent | INFO | Database initialized successfully
+2026-02-15 22:37:50,885 | slack_agent | INFO | Creating agent graph...
+2026-02-15 22:37:50,888 | slack_agent | INFO | Agent graph created successfully
+2026-02-15 22:37:50,911 | slack_agent | INFO | ============================================================
+2026-02-15 22:37:50,911 | slack_agent | INFO | OLake Slack Community Agent Starting
+2026-02-15 22:37:50,911 | slack_agent | INFO | ============================================================
+2026-02-15 22:37:50,911 | slack_agent | INFO | Webhook URL: http://localhost:3000/slack/events
+2026-02-15 22:37:50,911 | slack_agent | INFO | Health Check: http://localhost:3000/health
+2026-02-15 22:37:50,911 | slack_agent | INFO | Stats API: http://localhost:3000/stats
+2026-02-15 22:37:50,911 | slack_agent | INFO | 
+2026-02-15 22:37:50,911 | slack_agent | INFO | 💡 For local development, use ngrok:
+2026-02-15 22:37:50,911 | slack_agent | INFO |    ngrok http 3000
+2026-02-15 22:37:50,912 | slack_agent | INFO |    Then set Request URL in Slack to:
+2026-02-15 22:37:50,912 | slack_agent | INFO |    https://your-ngrok-url.ngrok.io/slack/events
+2026-02-15 22:37:50,912 | slack_agent | INFO | ============================================================
+2026-02-15 22:38:56,196 | slack_agent | INFO | Handling URL verification challenge
