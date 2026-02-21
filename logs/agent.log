@@ -557,3 +557,12 @@ The server responded with: {'ok': False, 'error': 'channel_not_found'}
 2026-02-21 14:48:11,201 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: When I try to connect to nessie I'm constantly getting errors saying invalid uri type | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
 2026-02-21 14:48:51,288 | slack_agent | INFO | [DeepReasoner] decision=RETRIEVE_MORE confidence=0.20 iteration=1
 2026-02-21 14:49:08,504 | slack_agent | INFO | CLARIFICATION_SENT: Sent 2 clarification question(s) | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 16:27:25,469 | slack_agent | INFO | Creating agent graph...
+2026-02-21 16:27:25,481 | slack_agent | INFO | Agent graph created successfully
+2026-02-21 16:27:46,889 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: issue, Urgency: high | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 16:28:05,009 | slack_agent | INFO | [ProblemDecomposer] summary="The user is encountering an 'invalid uri type' error when attempting to connect OLake to a Nessie catalog." queries=['OLake Nessie invalid uri type', 'Nessie catalog URI configuration', 'Iceberg Nessie connector URI format'] ambiguous=False
+2026-02-21 16:28:05,020 | slack_agent | INFO | Database initialized successfully
+2026-02-21 16:28:05,023 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 7 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 16:28:22,408 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: When I try to connect to nessie I'm constantly getting errors saying invalid uri type | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 16:28:52,717 | slack_agent | INFO | [DeepReasoner] decision=RETRIEVE_MORE confidence=0.40 iteration=1
+2026-02-21 16:29:07,882 | slack_agent | INFO | [SolutionProvider] sent answer confidence=0.40 len=474
