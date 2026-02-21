@@ -59,9 +59,11 @@ class ReasoningIteration:
     iteration: int
     thought_process: str
     confidence: float
+    decision: str            # "ANSWER" | "CLARIFY" | "RETRIEVE_MORE"
     needs_more_docs: bool
     needs_clarification: bool
     identified_gaps: List[str]
+    new_search_queries: List[str]
 
 
 class ConversationState(TypedDict):
@@ -93,12 +95,25 @@ class ConversationState(TypedDict):
     search_queries: List[str]
     retrieved_docs: List[RetrievedDocument]
     docs_relevance_score: float
-    
+
+    # Problem decomposition (from problem_decomposer)
+    problem_summary: Optional[str]        # one-sentence restatement of the issue
+    sub_questions: List[str]              # decomposed sub-questions
+    is_ambiguous: bool                    # True if issue cannot be partially diagnosed
+
+    # Iterative retrieval loop
+    retrieval_iterations: int             # how many retrieval rounds have run
+    max_retrieval_iterations: int         # cap (default 3)
+    new_search_queries: List[str]         # queries from reasoner for next retrieval
+    retrieval_history: List[str]          # all queries run so far (dedup across rounds)
+
     # Reasoning process
     reasoning_iterations: List[ReasoningIteration]
     current_iteration: int
     final_confidence: float
     solution_found: bool
+    reasoning_trace: Optional[str]        # deep_reasoner chain-of-thought (logged)
+    reasoner_decision: Optional[str]      # "ANSWER" | "CLARIFY" | "RETRIEVE_MORE"
     
     # Response generation
     needs_clarification: bool
@@ -107,7 +122,11 @@ class ConversationState(TypedDict):
     escalation_reason: Optional[str]
     response_text: Optional[str]
     response_blocks: Optional[List[Dict[str, Any]]]
-    
+
+    # Org-member guard
+    org_member_replied: bool  # True when an org team member is in the thread → bot silences
+    doc_sufficient: bool       # True when retrieved docs score above DOCS_ANSWER_THRESHOLD
+    rag_service_available: Optional[bool]  # None=unknown, True=up, False=using keyword fallback
     # Metadata
     processing_start_time: datetime
     processing_end_time: Optional[datetime]
@@ -188,12 +207,25 @@ def create_initial_state(event: Dict[str, Any]) -> ConversationState:
         search_queries=[],
         retrieved_docs=[],
         docs_relevance_score=0.0,
-        
+
+        # Problem decomposition
+        problem_summary=None,
+        sub_questions=[],
+        is_ambiguous=False,
+
+        # Iterative retrieval
+        retrieval_iterations=0,
+        max_retrieval_iterations=3,
+        new_search_queries=[],
+        retrieval_history=[],
+
         # Reasoning
         reasoning_iterations=[],
         current_iteration=0,
         final_confidence=0.0,
         solution_found=False,
+        reasoning_trace=None,
+        reasoner_decision=None,
         
         # Response
         needs_clarification=False,
@@ -202,7 +234,12 @@ def create_initial_state(event: Dict[str, Any]) -> ConversationState:
         escalation_reason=None,
         response_text=None,
         response_blocks=None,
-        
+
+        # Org-member guard
+        org_member_replied=False,
+        doc_sufficient=False,
+        rag_service_available=None,
+
         # Metadata
         processing_start_time=datetime.now(),
         processing_end_time=None,

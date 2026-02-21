@@ -1,0 +1,29 @@
+[project]
+name = "olake-rag-service"
+version = "0.1.0"
+description = "OLake RAG Microservice — chunking, embedding, vector search via MCP"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "fastmcp>=2.0",
+    "uvicorn[standard]>=0.30",
+    "qdrant-client>=1.12",
+    "sentence-transformers>=3.0",
+    "einops>=0.8",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+    "httpx>=0.27",
+]
+
+[project.scripts]
+rag-server = "server:main"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -4,11 +4,22 @@ Intent Analyzer Node - Classifies user message intent and urgency.
 
 from typing import Dict, Any
 import json
+import re
 
 from agent.state import ConversationState, IntentType, UrgencyLevel
 from agent.llm import get_chat_completion
 from agent.logger import get_logger, EventType
 from agent.config import Config
+
+
+def _parse_json(text: str | None) -> dict:
+    """Strip markdown fences and parse JSON. Raises ValueError on failure."""
+    if not text:
+        raise ValueError("LLM returned empty response")
+    # Strip ```json ... ``` or ``` ... ``` wrappers
+    text = re.sub(r"^```(?:json)?\s*", "", text.strip())
+    text = re.sub(r"\s*```$", "", text.strip())
+    return json.loads(text)
 
 
 async def analyze_intent(state: ConversationState) -> Dict[str, Any]:
@@ -57,6 +68,8 @@ Guidelines:
 - "high": Blocking issue preventing work
 - "medium": Important but not blocking
 - "low": General questions, discussions
+
+Respond with valid JSON only (no markdown fences).
 """
     
     try:
@@ -65,26 +78,25 @@ Guidelines:
             temperature=0.3
         )
         
-        # Parse response
-        analysis = json.loads(response)
+        analysis = _parse_json(response)
         
         # Update state
-        state["intent_type"] = IntentType(analysis["intent_type"])
-        state["urgency"] = UrgencyLevel(analysis["urgency"])
-        state["key_topics"] = analysis["key_topics"]
-        state["technical_terms"] = analysis["technical_terms"]
+        state["intent_type"] = IntentType(analysis.get("intent_type", "unknown"))
+        state["urgency"] = UrgencyLevel(analysis.get("urgency", "medium"))
+        state["key_topics"] = analysis.get("key_topics", [])
+        state["technical_terms"] = analysis.get("technical_terms", [])
         
         # Log the classification
         logger.log_event(
             event_type=EventType.INTENT_CLASSIFIED,
-            message=f"Intent: {analysis['intent_type']}, Urgency: {analysis['urgency']}",
+            message=f"Intent: {analysis.get('intent_type')}, Urgency: {analysis.get('urgency')}",
             user_id=user_id,
             channel_id=channel_id,
             metadata={
-                "intent_type": analysis["intent_type"],
-                "urgency": analysis["urgency"],
-                "key_topics": analysis["key_topics"],
-                "reasoning": analysis["reasoning"]
+                "intent_type": analysis.get("intent_type"),
+                "urgency": analysis.get("urgency"),
+                "key_topics": analysis.get("key_topics", []),
+                "reasoning": analysis.get("reasoning", "")
             }
         )
         

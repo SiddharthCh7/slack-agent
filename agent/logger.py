@@ -26,6 +26,7 @@ class EventType(Enum):
     DOCS_SEARCHED = "docs_searched"
     REASONING_ITERATION = "reasoning_iteration"
     CLARIFICATION_NEEDED = "clarification_needed"
+    CLARIFICATION_SENT = "clarification_sent"
     SOLUTION_PROVIDED = "solution_provided"
     ESCALATION_TRIGGERED = "escalation_triggered"
     RESPONSE_SENT = "response_sent"

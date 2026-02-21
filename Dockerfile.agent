@@ -1,0 +1,25 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN pip install uv --no-cache-dir
+
+# Project definition (layer cache)
+COPY pyproject.toml .
+# Install all dependencies system-wide
+RUN uv pip install --system --no-cache \
+        flask langchain langgraph langchain-google-genai \
+        google-genai slack-sdk python-dotenv httpx \
+        sentence-transformers einops qdrant-client
+
+# Source
+COPY . .
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=6 \
+    CMD python -c "import httpx; httpx.get('http://localhost:8080/health', timeout=3)"
+
+ENV RAG_SERVICE_URL=http://rag-service:7070
+
+CMD ["python", "-m", "agent.main", "--port", "8080"]

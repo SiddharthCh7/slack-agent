@@ -1,0 +1,103 @@
+# OLake Community Agent — Docker Compose
+#
+# Dev:  docker compose up              (uses local qdrant_db/ folder)
+# Prod: set QDRANT_URL to hosted URL, QDRANT_API_KEY for Qdrant Cloud
+#
+# Qdrant URL override examples:
+#   local file:    QDRANT_URL=./qdrant_db         (default, no qdrant container needed)
+#   Docker:        QDRANT_URL=http://qdrant:6333   (uncomment qdrant service below)
+#   Qdrant Cloud:  QDRANT_URL=https://xyz.cloud.qdrant.io  QDRANT_API_KEY=...
+
+services:
+
+  # ── Qdrant (comment out when using hosted Qdrant) ─────────────────────
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"     # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/readyz"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+  # ── RAG Service ────────────────────────────────────────────────────────
+  rag-service:
+    build:
+      context: ./services/rag
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "7070:7070"
+    environment:
+      # Switch QDRANT_URL to point at the qdrant container
+      QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
+      QDRANT_API_KEY: ${QDRANT_API_KEY:-}
+      DOCS_COLLECTION: ${DOCS_COLLECTION:-olake_docs}
+      CODE_COLLECTION: ${CODE_COLLECTION:-olake_code}
+      EMBED_MODEL: ${EMBED_MODEL:-nomic-ai/nomic-embed-text-v1.5}
+      EMBED_DEVICE: ${EMBED_DEVICE:-cpu}
+      DOCS_FILE: /app/docs/olake_docs.md
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      # Mount docs read-only
+      - ./docs:/app/docs:ro
+      # Cache HuggingFace model weights (downloaded once, reused across restarts)
+      - hf_cache:/root/.cache/huggingface
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import httpx; r=httpx.get('http://localhost:7070/health'); exit(0 if r.json().get('ready') else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 120s    # embedding model download can take ~2 min
+
+  # ── Agent Service ──────────────────────────────────────────────────────
+  agent-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      RAG_SERVICE_URL: http://rag-service:7070
+      RAG_TOOL_TIMEOUT: ${RAG_TOOL_TIMEOUT:-10}
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+      SLACK_APP_ID: ${SLACK_APP_ID:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      LLM_PROVIDER: ${LLM_PROVIDER:-gemini}
+      DATABASE_PATH: /app/data/slack_agent.db
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      ENABLE_VECTOR_SEARCH: "true"
+      MAX_RETRIEVED_DOCS: ${MAX_RETRIEVED_DOCS:-6}
+      DOCS_ANSWER_THRESHOLD: ${DOCS_ANSWER_THRESHOLD:-0.5}
+      CONFIDENCE_THRESHOLD_FOR_AUTO_REPLY: ${CONFIDENCE_THRESHOLD_FOR_AUTO_REPLY:-0.75}
+    volumes:
+      - agent_data:/app/data
+      - ./logs:/app/logs
+      - ./olake-team.json:/app/olake-team.json:ro
+    depends_on:
+      rag-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import httpx; httpx.get('http://localhost:8080/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+volumes:
+  qdrant_data:
+  hf_cache:
+  agent_data:

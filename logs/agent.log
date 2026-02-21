@@ -389,3 +389,171 @@
 2026-02-15 22:37:50,912 | slack_agent | INFO |    https://your-ngrok-url.ngrok.io/slack/events
 2026-02-15 22:37:50,912 | slack_agent | INFO | ============================================================
 2026-02-15 22:38:56,196 | slack_agent | INFO | Handling URL verification challenge
+2026-02-20 22:15:57,313 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-20 22:16:19,336 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-20 22:16:19,342 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:16:19,342 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:16:19,344 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:16:20,559 | slack_agent | ERROR | Team resolver initialization failed: The request to the Slack API failed. (url: https://slack.com/api/users.list)
+The server responded with: {'ok': False, 'error': 'missing_scope', 'needed': 'users:read', 'provided': 'channels:history,channels:read,chat:write,chat:write.public,groups:history,groups:read,groups:write,app_mentions:read,assistant:write'}. Org-member features will use name-matching fallback.
+2026-02-20 22:16:20,559 | slack_agent | INFO | ============================================================
+2026-02-20 22:16:20,559 | slack_agent | INFO | OLake Slack Community Agent Starting
+2026-02-20 22:16:20,559 | slack_agent | INFO | ============================================================
+2026-02-20 22:16:20,559 | slack_agent | INFO | Webhook: http://localhost:3000/slack/events
+2026-02-20 22:16:20,560 | slack_agent | INFO | Health:  http://localhost:3000/health
+2026-02-20 22:16:20,560 | slack_agent | INFO | Stats:   http://localhost:3000/stats
+2026-02-20 22:16:20,560 | slack_agent | INFO | ============================================================
+2026-02-20 22:19:23,551 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:19:23,552 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:19:28,559 | slack_agent | ERROR | ERROR: IntentAnalysisError - Gemini API error: 404 models/gemini-2.0-flash-exp is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2026-02-20 22:19:28,562 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:19:29,282 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-20 22:19:29,763 | slack_agent | ERROR | ERROR: SlackUserInfoError - Failed to get user info: missing_scope
+2026-02-20 22:19:30,513 | slack_agent | ERROR | ERROR: SlackThreadError - Failed to get thread: channel_not_found
+2026-02-20 22:19:30,513 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 0 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:19:50,071 | slack_agent | WARNING | Vector DB search failed for 'olake_docs': RetrievedDocument.__init__() got an unexpected keyword argument 'metadata'
+2026-02-20 22:19:50,134 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: What is OLake? | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:19:50,536 | slack_agent | ERROR | ERROR: DeepReasoningError - Gemini API error: 404 models/gemini-2.0-flash-exp is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2026-02-20 22:19:52,047 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-20 22:19:52,565 | slack_agent | ERROR | ERROR: SlackReactionError - Failed to add reaction: missing_scope
+2026-02-20 22:19:53,110 | slack_agent | ERROR | ERROR: SlackMessageError - Failed to send message: channel_not_found
+2026-02-20 22:19:53,110 | slack_agent | ERROR | ERROR: EscalationHandlerError - The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'channel_not_found'}
+2026-02-20 22:22:44,423 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:22:44,424 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:22:45,815 | slack_agent | ERROR | ERROR: IntentAnalysisError - Gemini API error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 14.216333294s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '14s'}]}}
+2026-02-20 22:22:45,820 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:22:46,410 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-20 22:22:47,020 | slack_agent | ERROR | ERROR: SlackThreadError - Failed to get thread: channel_not_found
+2026-02-20 22:22:47,021 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 0 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:23:01,225 | slack_agent | WARNING | Vector DB search failed for 'olake_docs': RetrievedDocument.__init__() got an unexpected keyword argument 'metadata'
+2026-02-20 22:23:01,273 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: What is OLake? | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:23:02,354 | slack_agent | ERROR | ERROR: DeepReasoningError - Gemini API error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 57.637630011s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '57s'}]}}
+2026-02-20 22:23:03,320 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-20 22:23:03,976 | slack_agent | ERROR | ERROR: SlackReactionError - Failed to add reaction: missing_scope
+2026-02-20 22:23:05,489 | slack_agent | ERROR | ERROR: SlackMessageError - Failed to send message: channel_not_found
+2026-02-20 22:23:05,489 | slack_agent | ERROR | ERROR: EscalationHandlerError - The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'channel_not_found'}
+2026-02-20 22:23:36,782 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:23:36,783 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:23:41,445 | slack_agent | ERROR | ERROR: IntentAnalysisError - Expecting value: line 1 column 1 (char 0)
+2026-02-20 22:23:41,455 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:23:42,007 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-20 22:23:42,501 | slack_agent | ERROR | ERROR: SlackThreadError - Failed to get thread: channel_not_found
+2026-02-20 22:23:42,502 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 0 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:23:56,767 | slack_agent | WARNING | Vector DB search failed for 'olake_docs': RetrievedDocument.__init__() got an unexpected keyword argument 'metadata'
+2026-02-20 22:23:56,816 | slack_agent | WARNING | Vector DB search failed for 'olake_code': RetrievedDocument.__init__() got an unexpected keyword argument 'metadata'
+2026-02-20 22:23:56,817 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: How do I set up CDC with PostgreSQL? | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:23:59,113 | slack_agent | ERROR | ERROR: DeepReasoningError - the JSON object must be str, bytes or bytearray, not NoneType
+2026-02-20 22:23:59,830 | slack_agent | INFO | Slack client initialized. Bot User ID: U0AFZ2YKVQ8
+2026-02-20 22:24:00,337 | slack_agent | ERROR | ERROR: SlackReactionError - Failed to add reaction: missing_scope
+2026-02-20 22:24:00,850 | slack_agent | ERROR | ERROR: SlackMessageError - Failed to send message: channel_not_found
+2026-02-20 22:24:00,851 | slack_agent | ERROR | ERROR: EscalationHandlerError - The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'channel_not_found'}
+2026-02-20 22:45:15,876 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:45:15,877 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:45:19,662 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: question, Urgency: low | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:45:19,668 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:45:19,669 | slack_agent | ERROR | ERROR: ContextLoadingError - '_FakeSlackClient' object has no attribute 'get_thread_messages'
+2026-02-20 22:45:34,314 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: How do I set up CDC with PostgreSQL? | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:45:37,463 | slack_agent | ERROR | ERROR: DeepReasoningError - LLM returned empty response
+2026-02-20 22:45:37,471 | slack_agent | ERROR | ERROR: EscalationHandlerError - '_FakeSlackClient' object has no attribute 'add_reaction'
+2026-02-20 22:47:21,307 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:47:21,308 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:47:25,481 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: question, Urgency: low | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:47:25,488 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:47:25,489 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 0 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:47:38,796 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: How do I set up CDC with PostgreSQL? | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:47:42,165 | slack_agent | ERROR | ERROR: DeepReasoningError - LLM returned empty response
+2026-02-20 22:47:42,169 | slack_agent | INFO | ESCALATION_TRIGGERED: Escalated to team: Error during reasoning: LLM returned empty response | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:49:29,966 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:49:29,967 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:49:30,770 | slack_agent | ERROR | ERROR: IntentAnalysisError - Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-20 22:49:30,777 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:49:30,779 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 1 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:50:10,050 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: How do I set up CDC with PostgreSQL? | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:50:10,228 | slack_agent | ERROR | ERROR: DeepReasoningError - Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-20 22:50:10,230 | slack_agent | INFO | ESCALATION_TRIGGERED: Escalated to team: Error during reasoning: Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}} | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:51:13,192 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:51:13,193 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:51:13,983 | slack_agent | ERROR | ERROR: IntentAnalysisError - Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-20 22:51:13,986 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:51:13,989 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 2 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:52:37,349 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:52:37,350 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:52:37,993 | slack_agent | ERROR | ERROR: IntentAnalysisError - Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-20 22:52:37,995 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:52:37,996 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 2 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:54:06,899 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:54:06,900 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:54:07,522 | slack_agent | ERROR | ERROR: IntentAnalysisError - Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-20 22:54:07,524 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:54:07,525 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 2 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:54:51,413 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:54:51,413 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:54:52,091 | slack_agent | ERROR | ERROR: IntentAnalysisError - Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-20 22:54:52,094 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:54:52,096 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 2 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:55:58,994 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:55:58,995 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:55:59,481 | slack_agent | ERROR | ERROR: IntentAnalysisError - Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-02-20 22:55:59,483 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:55:59,485 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 2 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:57:35,206 | slack_agent | INFO | Creating agent graph...
+2026-02-20 22:57:35,207 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 22:57:38,984 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: question, Urgency: low | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:57:38,994 | slack_agent | INFO | Database initialized successfully
+2026-02-20 22:57:38,996 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 2 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:57:53,325 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: How do I set up CDC with PostgreSQL? | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 22:58:00,960 | slack_agent | INFO | RESPONSE_SENT: Response sent (confidence: 1.00) | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 23:04:01,920 | slack_agent | INFO | Creating agent graph...
+2026-02-20 23:04:01,921 | slack_agent | INFO | Agent graph created successfully
+2026-02-20 23:04:20,096 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: issue, Urgency: high | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 23:04:20,106 | slack_agent | INFO | Database initialized successfully
+2026-02-20 23:04:20,109 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 3 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 23:04:35,564 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: I am unable to connect to my rest catalog hosted on aws. | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-20 23:04:44,617 | slack_agent | INFO | RESPONSE_SENT: Response sent (confidence: 0.90) | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 00:43:58,767 | slack_agent | INFO | Creating agent graph...
+2026-02-21 00:43:58,777 | slack_agent | INFO | Agent graph created successfully
+2026-02-21 00:44:34,832 | slack_agent | INFO | Creating agent graph...
+2026-02-21 00:44:34,843 | slack_agent | INFO | Agent graph created successfully
+2026-02-21 00:58:32,883 | slack_agent | INFO | Creating agent graph...
+2026-02-21 00:58:32,895 | slack_agent | INFO | Agent graph created successfully
+2026-02-21 00:58:48,006 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: issue, Urgency: high | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 00:58:56,407 | slack_agent | INFO | [ProblemDecomposer] summary="The user's MySQL CDC pipeline stopped functioning following a MySQL database version upgrade." queries=['binlog stopped after MySQL upgrade', 'mysql binlog configuration', 'mysql version compatibility', 'CDC binlog stopped', 'mysql upgrade replication error'] ambiguous=False
+2026-02-21 00:58:56,413 | slack_agent | INFO | Database initialized successfully
+2026-02-21 00:58:56,416 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 4 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 00:58:56,453 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: binlog stopped after MySQL upgrade | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 00:59:01,244 | slack_agent | INFO | [DeepReasoner] decision=RETRIEVE_MORE confidence=0.20 iteration=1
+2026-02-21 00:59:01,275 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: binlog stopped after MySQL upgrade | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 00:59:22,644 | slack_agent | INFO | [DeepReasoner] decision=RETRIEVE_MORE confidence=0.00 iteration=2
+2026-02-21 00:59:22,684 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: binlog stopped after MySQL upgrade | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 00:59:42,527 | slack_agent | ERROR | ERROR: DeepReasoningError - Unterminated string starting at: line 4 column 22 (char 69)
+2026-02-21 00:59:47,240 | slack_agent | INFO | [SolutionProvider] sent answer confidence=0.00 len=203
+2026-02-21 14:24:19,644 | slack_agent | INFO | Creating agent graph...
+2026-02-21 14:24:19,655 | slack_agent | INFO | Agent graph created successfully
+2026-02-21 14:24:43,157 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: issue, Urgency: high | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:24:53,902 | slack_agent | INFO | [ProblemDecomposer] summary="The user's MySQL CDC pipeline stopped functioning following a MySQL database version upgrade." queries=['binlog stopped after MySQL upgrade', 'mysql binlog cdc requirements', 'mysql version compatibility olake', 'resume binlog replication', 'mysql upgrade cdc failure'] ambiguous=False
+2026-02-21 14:24:53,910 | slack_agent | INFO | Database initialized successfully
+2026-02-21 14:24:53,913 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 5 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:24:53,947 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: binlog stopped after MySQL upgrade | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:25:02,348 | slack_agent | INFO | [DeepReasoner] decision=RETRIEVE_MORE confidence=0.10 iteration=1
+2026-02-21 14:25:33,018 | slack_agent | ERROR | ERROR: ClarificationError - type object 'EventType' has no attribute 'CLARIFICATION_SENT'
+2026-02-21 14:26:46,425 | slack_agent | INFO | Creating agent graph...
+2026-02-21 14:26:46,439 | slack_agent | INFO | Agent graph created successfully
+2026-02-21 14:26:51,355 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: issue, Urgency: high | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:27:12,040 | slack_agent | INFO | [ProblemDecomposer] summary='MySQL binlog replication stopped working following a database version upgrade.' queries=['binlog stopped after MySQL upgrade', 'MySQL upgrade binlog CDC', 'OLake MySQL binlog_format', 'MySQL binlog_row_image full'] ambiguous=False
+2026-02-21 14:27:12,041 | slack_agent | INFO | Database initialized successfully
+2026-02-21 14:27:12,043 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 5 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:27:12,061 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: binlog stopped after MySQL upgrade | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:27:18,598 | slack_agent | INFO | [DeepReasoner] decision=RETRIEVE_MORE confidence=0.20 iteration=1
+2026-02-21 14:27:29,434 | slack_agent | INFO | CLARIFICATION_SENT: Sent 2 clarification question(s) | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:47:34,000 | slack_agent | INFO | Creating agent graph...
+2026-02-21 14:47:34,012 | slack_agent | INFO | Agent graph created successfully
+2026-02-21 14:47:55,700 | slack_agent | INFO | INTENT_CLASSIFIED: Intent: issue, Urgency: high | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:48:11,159 | slack_agent | INFO | [ProblemDecomposer] summary="The user is encountering an 'invalid uri type' error when attempting to connect OLake to a Nessie catalog." queries=["When I try to connect to nessie I'm constantly getting errors saying invalid uri type", 'OLake Nessie invalid uri type', 'Nessie catalog URI format', 'OLake Iceberg Nessie connection error'] ambiguous=False
+2026-02-21 14:48:11,163 | slack_agent | INFO | Database initialized successfully
+2026-02-21 14:48:11,166 | slack_agent | INFO | CONTEXT_LOADED: Loaded context: 6 previous messages, 0 thread messages, org_member_replied=False | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:48:11,201 | slack_agent | INFO | DOCS_SEARCHED: Searched docs for: When I try to connect to nessie I'm constantly getting errors saying invalid uri type | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST
+2026-02-21 14:48:51,288 | slack_agent | INFO | [DeepReasoner] decision=RETRIEVE_MORE confidence=0.20 iteration=1
+2026-02-21 14:49:08,504 | slack_agent | INFO | CLARIFICATION_SENT: Sent 2 clarification question(s) | User: U_LOCAL_TEST | Channel: C_LOCAL_TEST

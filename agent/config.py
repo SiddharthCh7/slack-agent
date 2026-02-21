@@ -10,6 +10,9 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Path to team definition file (relative to project root)
+TEAM_FILE_PATH = Path(__file__).parent.parent / "olake-team.json"
+
 
 class Config:
     """Configuration for Slack Community Agent."""
@@ -36,10 +39,17 @@ class Config:
     MAX_CONTEXT_MESSAGES: int = int(os.getenv("MAX_CONTEXT_MESSAGES", "10"))
     
     # Documentation Search
-    ENABLE_VECTOR_SEARCH: bool = os.getenv("ENABLE_VECTOR_SEARCH", "true").lower() == "true"
+    ENABLE_VECTOR_SEARCH: bool = os.getenv("ENABLE_VECTOR_SEARCH", "false").lower() == "true"
     MAX_RETRIEVED_DOCS: int = int(os.getenv("MAX_RETRIEVED_DOCS", "5"))
     DOC_RELEVANCE_THRESHOLD: float = float(os.getenv("DOC_RELEVANCE_THRESHOLD", "0.6"))
+    # Threshold above which retrieved docs are considered sufficient to answer the question
+    DOCS_ANSWER_THRESHOLD: float = float(os.getenv("DOCS_ANSWER_THRESHOLD", "0.5"))
     DOCS_PATH: str = os.getenv("DOCS_PATH", "docs/olake_knowledge_base")
+
+    # Vector DB — Chroma / Qdrant
+    VECTOR_DB_URL: str = os.getenv("VECTOR_DB_URL", "./qdrant_db")
+    DOCS_COLLECTION: str = os.getenv("DOCS_COLLECTION", "olake_docs")
+    CODE_COLLECTION: str = os.getenv("CODE_COLLECTION", "olake_code")
     
     # Database
     DATABASE_PATH: str = os.getenv("DATABASE_PATH", "data/slack_agent.db")
@@ -59,9 +69,10 @@ class Config:
     HIGH_PRIORITY_CHANNELS: list = [
         c.strip() for c in os.getenv("HIGH_PRIORITY_CHANNELS", "").split(",") if c.strip()
     ]
-    ESCALATION_USERS: list = [
-        u.strip() for u in os.getenv("ESCALATION_USERS", "").split(",") if u.strip()
-    ]
+
+    # Team / Escalation — loaded from olake-team.json (no env var needed)
+    # Org member detection uses slack_name matching via team_resolver.py
+    TEAM_FILE: Path = Path(__file__).parent.parent / "olake-team.json"
     
     @classmethod
     def validate(cls) -> bool:
@@ -112,8 +123,7 @@ class Config:
 
 # OLake Context (for LLM)
 OLAKE_CONTEXT = """
-OLake is an open-source data ingestion and transformation framework for modern data 
-lakehouses. It helps organizations build reliable, scalable data pipelines with support 
+OLake is an open-source data ingestion tool from databases to Apache Iceberg. It helps organizations build reliable, scalable data pipelines with support 
 for Apache Iceberg, CDC (Change Data Capture), and various data sources.
 
 Key Features:

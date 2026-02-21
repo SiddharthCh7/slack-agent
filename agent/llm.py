@@ -1,5 +1,7 @@
 """
 Enhanced LLM utilities for Slack Community Agent.
+
+Uses google.genai (the current SDK) with gemini-2.0-flash.
 """
 
 import os
@@ -14,17 +16,17 @@ async def get_chat_completion(
 ) -> str:
     """
     Get chat completion from LLM provider.
-    
+
     Args:
         messages: List of message dicts with 'role' and 'content'
         temperature: Temperature for generation
         max_tokens: Maximum tokens in response
-        
+
     Returns:
         Response text from LLM
     """
     provider = Config.LLM_PROVIDER.lower()
-    
+
     if provider == "gemini":
         return await _get_gemini_completion(messages, temperature, max_tokens)
     elif provider == "openai":
@@ -38,34 +40,32 @@ async def _get_gemini_completion(
     temperature: float,
     max_tokens: Optional[int]
 ) -> str:
-    """Get completion from Google Gemini."""
+    """Get completion from Google Gemini using google.genai SDK."""
     try:
-        import google.generativeai as genai
-        
-        genai.configure(api_key=Config.GEMINI_API_KEY)
-        
-        # Convert messages to Gemini format
-        model = genai.GenerativeModel('gemini-2.0-flash-exp')
-        
-        # Combine messages into single prompt for now
-        # (Gemini's chat has different format)
-        prompt = "\n\n".join([
+        from google import genai
+        from google.genai import types
+
+        client = genai.Client(api_key=Config.GEMINI_API_KEY)
+
+        # Convert role-based messages into a flat prompt string.
+        # google.genai supports full Chat sessions too, but a prompt
+        # string is simpler and works for all models.
+        prompt = "\n\n".join(
             f"{msg['role'].upper()}: {msg['content']}"
             for msg in messages
-        ])
-        
-        generation_config = {
-            "temperature": temperature,
-            "max_output_tokens": max_tokens or 2048,
-        }
-        
-        response = model.generate_content(
-            prompt,
-            generation_config=generation_config
         )
-        
+
+        response = client.models.generate_content(
+            model="gemini-3-flash-preview",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=temperature,
+                max_output_tokens=max_tokens or 2048,
+            ),
+        )
+
         return response.text
-        
+
     except Exception as e:
         raise RuntimeError(f"Gemini API error: {str(e)}")
 
@@ -78,18 +78,18 @@ async def _get_openai_completion(
     """Get completion from OpenAI."""
     try:
         from openai import AsyncOpenAI
-        
+
         client = AsyncOpenAI(api_key=Config.OPENAI_API_KEY)
-        
+
         response = await client.chat.completions.create(
             model="gpt-4-turbo-preview",
             messages=messages,
             temperature=temperature,
             max_tokens=max_tokens or 2048
         )
-        
+
         return response.choices[0].message.content
-        
+
     except Exception as e:
         raise RuntimeError(f"OpenAI API error: {str(e)}")
 
