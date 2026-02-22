@@ -27,6 +27,15 @@ from agent.config import Config, OLAKE_CONTEXT
 
 _PARSE_RE_FENCE = re.compile(r"^```(?:json)?\s*|\s*```$")
 
+# Sentence-ending punctuation that signals a complete thought
+_SENTENCE_ENDINGS = (".", "!", "?", "…", ":", "```")
+
+
+def _looks_truncated(text: str) -> bool:
+    """Return True if text appears to end mid-sentence (token-limit cut-off)."""
+    stripped = text.rstrip()
+    return bool(stripped) and not stripped.endswith(_SENTENCE_ENDINGS)
+
 # Alex persona system prompt — injected into polish pass
 _ALEX_SYSTEM = f"""You are Alex, a senior support engineer at OLake/Datazip.
 
@@ -113,7 +122,7 @@ Write the final Slack reply. Start directly with the answer — no preamble."""
             {"role": "user",   "content": prompt},
         ],
         temperature=0.4,
-        max_tokens=600,
+        # max_tokens=600,
     )
     return (response or "").strip()
 
@@ -146,7 +155,12 @@ def solution_provider(state: ConversationState) -> ConversationState:
         )
 
         # Decide whether to polish: skip if draft is good (>= 80 chars and confident)
-        needs_polish = (not response_text or len(response_text) < 80 or confidence < 0.45)
+        needs_polish = (
+            not response_text
+            or len(response_text) < 80
+            or confidence < 0.45
+            or _looks_truncated(response_text)   # catch mid-sentence token cut-offs
+        )
 
         # Guard: if confidence is very low AND no real draft, don't hallucinate.
         # Instead send a humble fallback rather than an LLM-generated guess.

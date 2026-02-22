@@ -21,6 +21,9 @@ class Config:
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "gemini")
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")
     GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
+    OPENROUTER_API_KEY: Optional[str] = os.getenv("OPENROUTER_API_KEY")
+    OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "anthropic/claude-3.5-sonnet")
+    OPENROUTER_BASE_URL: str = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
     
     # Slack
     SLACK_BOT_TOKEN: str = os.getenv("SLACK_BOT_TOKEN", "")
@@ -90,6 +93,9 @@ class Config:
         
         if cls.LLM_PROVIDER == "gemini" and not cls.GEMINI_API_KEY:
             errors.append("GEMINI_API_KEY is required when using Gemini")
+
+        if cls.LLM_PROVIDER == "openrouter" and not cls.OPENROUTER_API_KEY:
+            errors.append("OPENROUTER_API_KEY is required when using OpenRouter")
         
         if errors:
             for error in errors:

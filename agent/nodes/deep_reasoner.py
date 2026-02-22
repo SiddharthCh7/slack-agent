@@ -146,7 +146,6 @@ async def deep_reasoner(state: ConversationState) -> Dict[str, Any]:
     sub_questions  = state.get("sub_questions", [])
     retrieved_docs = state.get("retrieved_docs", [])
     thread_context = state.get("thread_context", [])
-    intent_type    = state.get("intent_type")
     retrieval_iter = state.get("retrieval_iterations", 0)
     max_ret_iter   = state.get("max_retrieval_iterations", 3)
     prev_iterations = state.get("reasoning_iterations", [])
@@ -185,7 +184,7 @@ Analyse. Decide. Output JSON only."""
                 {"role": "user",   "content": user_prompt},
             ],
             temperature=0.3,
-            max_tokens=2000,   # generous — reasoning_trace can be long
+            # max_tokens=3000,   # generous — reasoning_trace can be long
         )
         result = _parse_json(response)
 
@@ -258,4 +257,19 @@ Analyse. Decide. Output JSON only."""
 
 def deep_reasoner_sync(state: ConversationState) -> ConversationState:
     """Synchronous wrapper for LangGraph."""
-    return asyncio.run(deep_reasoner(state))
+    import asyncio
+    import gc
+    
+    # Create a new event loop explicitly to avoid "Event loop is closed" errors
+    # from background tasks (e.g., httpx/Qdrant async cleanup)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        result = loop.run_until_complete(deep_reasoner(state))
+    finally:
+        # Ensure all pending async cleanup happens before closing the loop
+        loop.run_until_complete(asyncio.sleep(0))
+        loop.close()
+        asyncio.set_event_loop(None)
+        gc.collect()  # Clean up any remaining references
+    return result

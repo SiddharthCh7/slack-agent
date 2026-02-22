@@ -12,7 +12,14 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env from project root (parent of services/rag)
+# override=True to ensure .env values take precedence over shell env vars
+project_root = Path(__file__).parent.parent.parent
+env_path = project_root / ".env"
+if env_path.exists():
+    load_dotenv(env_path, override=True)
+else:
+    load_dotenv(override=True)  # Fallback to current directory
 
 
 class Config:
@@ -30,7 +37,7 @@ class Config:
 
     # ── Chunking ──────────────────────────────────────────────────────────
     MAX_CHUNK_CHARS: int = int(os.getenv("MAX_CHUNK_CHARS", "2500"))
-    OVERLAP_CHARS: int = int(os.getenv("OVERLAP_CHARS", "200"))
+    OVERLAP_CHARS: int = int(os.getenv("OVERLAP_CHARS", "400"))  # ~100 tokens
 
     # ── Retrieval ─────────────────────────────────────────────────────────
     DOC_RELEVANCE_THRESHOLD: float = float(os.getenv("DOC_RELEVANCE_THRESHOLD", "0.35"))

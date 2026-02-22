@@ -136,7 +136,7 @@ def create_agent_graph() -> StateGraph:
     workflow = StateGraph(ConversationState)
 
     # ── Nodes ────────────────────────────────────────────────────────────
-    workflow.add_node("analyze_intent",    analyze_intent_sync)
+    # workflow.add_node("analyze_intent",    analyze_intent_sync)
     workflow.add_node("problem_decomposer", problem_decomposer_sync)
     workflow.add_node("build_context",     build_context)
     workflow.add_node("retrieve_docs",     retrieve_docs_with_counter)
@@ -146,10 +146,10 @@ def create_agent_graph() -> StateGraph:
     workflow.add_node("escalation",        escalation_handler)
 
     # ── Entry ─────────────────────────────────────────────────────────────
-    workflow.set_entry_point("analyze_intent")
+    workflow.set_entry_point("problem_decomposer")
 
     # ── Fixed edges ───────────────────────────────────────────────────────
-    workflow.add_edge("analyze_intent",    "problem_decomposer")
+    # workflow.add_edge("analyze_intent",    "problem_decomposer")
     workflow.add_edge("problem_decomposer", "build_context")
 
     # After context: exit silently if org member is in the thread
