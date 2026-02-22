@@ -1,7 +1,7 @@
 """
 Enhanced LLM utilities for Slack Community Agent.
 
-Uses google.genai (the current SDK) with gemini-2.0-flash.
+Supports: Google Gemini, OpenAI, and OpenRouter (multi-provider API).
 """
 
 import os
@@ -29,7 +29,7 @@ async def get_chat_completion(
 
     if provider == "gemini":
         return await _get_gemini_completion(messages, temperature, max_tokens)
-    elif provider == "openai":
+    elif provider in ("openai", "openrouter"):
         return await _get_openai_completion(messages, temperature, max_tokens)
     else:
         raise ValueError(f"Unsupported LLM provider: {provider}")
@@ -75,23 +75,35 @@ async def _get_openai_completion(
     temperature: float,
     max_tokens: Optional[int]
 ) -> str:
-    """Get completion from OpenAI."""
+    """Get completion from OpenAI or OpenRouter."""
     try:
         from openai import AsyncOpenAI
 
-        client = AsyncOpenAI(api_key=Config.OPENAI_API_KEY)
+        # Determine API key and model based on provider
+        if Config.LLM_PROVIDER.lower() == "openrouter":
+            api_key = Config.OPENROUTER_API_KEY
+            model = Config.OPENROUTER_MODEL
+            base_url = Config.OPENROUTER_BASE_URL
+        else:
+            api_key = Config.OPENAI_API_KEY
+            model = "gpt-4-turbo-preview"
+            base_url = None
+
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
 
         response = await client.chat.completions.create(
-            model="gpt-4-turbo-preview",
+            model=model,
             messages=messages,
             temperature=temperature,
-            max_tokens=max_tokens or 2048
+            # max_tokens=max_tokens or 2048
         )
 
+        # print("++++++++++Model Output++++++++++")
+        # print(response.choices[0].message.content)
         return response.choices[0].message.content
 
     except Exception as e:
-        raise RuntimeError(f"OpenAI API error: {str(e)}")
+        raise RuntimeError(f"OpenAI/OpenRouter API error: {str(e)}")
 
 
 def get_chat_completion_sync(

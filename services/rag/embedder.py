@@ -1,15 +1,18 @@
 """
-Local embedding using nomic-embed-text-v1.5 via sentence-transformers.
+Local embedding using nomic-embed-text-v1.5 via transformers.
 
-Task prefixes (nomic best practice):
-  - Indexing:  "search_document: {text}"
-  - Querying:  "search_query: {text}"
+Uses AutoModel + AutoTokenizer with mean pooling + L2 normalization.
+Prefix all text with "search_document: " before embedding.
+No sentence-transformers, no fastembed.
 """
 
 from __future__ import annotations
 import logging
 from functools import lru_cache
 from typing import List
+
+import torch
+from transformers import AutoModel, AutoTokenizer
 
 from config import Config
 
@@ -21,32 +24,69 @@ _QUERY_PREFIX = "search_query: "
 
 @lru_cache(maxsize=1)
 def _get_model():
-    """Load and cache the embedding model (downloads on first call)."""
-    from sentence_transformers import SentenceTransformer
+    """Load and cache the embedding model (uses HuggingFace cache)."""
     log.info(f"Loading embedding model: {Config.EMBED_MODEL}")
-    model = SentenceTransformer(
+    tokenizer = AutoTokenizer.from_pretrained(
         Config.EMBED_MODEL,
+        local_files_only=True,
         trust_remote_code=True,
-        device=Config.EMBED_DEVICE,
     )
+    model = AutoModel.from_pretrained(
+        Config.EMBED_MODEL,
+        local_files_only=True,
+        trust_remote_code=True,
+    )
+    model.eval()
     log.info("Embedding model loaded ✓")
-    return model
+    return model, tokenizer
+
+
+def _mean_pooling(token_embeddings: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
+    """Mean pooling over token embeddings."""
+    input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+    sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
+    sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+    return sum_embeddings / sum_mask
+
+
+def _normalize_embeddings(embeddings: torch.Tensor) -> torch.Tensor:
+    """L2 normalize embeddings."""
+    return torch.nn.functional.normalize(embeddings, p=2, dim=1)
+
+
+def _embed_texts(texts: List[str], prefix: str) -> List[List[float]]:
+    """Embed a list of texts with the given prefix."""
+    model, tokenizer = _get_model()
+    prefixed_texts = [prefix + t for t in texts]
+
+    encoded = tokenizer(
+        prefixed_texts,
+        padding=True,
+        truncation=True,
+        max_length=512,
+        return_tensors="pt",
+    )
+
+    with torch.no_grad():
+        outputs = model(**encoded)
+        token_embeddings = outputs.last_hidden_state
+        pooled = _mean_pooling(token_embeddings, encoded["attention_mask"])
+        normalized = _normalize_embeddings(pooled)
+
+    return normalized.cpu().tolist()
 
 
 def embed_documents(texts: List[str]) -> List[List[float]]:
     """
     Embed a batch of document chunks for indexing.
     Applies the 'search_document:' task prefix.
+    Processes one at a time - no batching for stability.
     """
-    model = _get_model()
-    prefixed = [_INDEX_PREFIX + t for t in texts]
-    vectors = model.encode(
-        prefixed,
-        batch_size=Config.EMBED_BATCH_SIZE,
-        show_progress_bar=len(texts) > 100,
-        normalize_embeddings=True,
-    )
-    return [v.tolist() for v in vectors]
+    all_vectors = []
+    for text in texts:
+        vectors = _embed_texts([text], _INDEX_PREFIX)
+        all_vectors.append(vectors[0])
+    return all_vectors
 
 
 def embed_query(text: str) -> List[float]:
@@ -54,25 +94,18 @@ def embed_query(text: str) -> List[float]:
     Embed a single retrieval query.
     Applies the 'search_query:' task prefix.
     """
-    model = _get_model()
-    vector = model.encode(
-        _QUERY_PREFIX + text,
-        normalize_embeddings=True,
-    )
-    return vector.tolist()
+    vectors = _embed_texts([text], _QUERY_PREFIX)
+    return vectors[0]
 
 
 def embed_queries(texts: List[str]) -> List[List[float]]:
     """Embed multiple queries (for multi-query retrieval)."""
-    model = _get_model()
-    prefixed = [_QUERY_PREFIX + t for t in texts]
-    vectors = model.encode(prefixed, normalize_embeddings=True)
-    return [v.tolist() for v in vectors]
+    return _embed_texts(texts, _QUERY_PREFIX)
 
 
 def vector_size() -> int:
     """Return the dimensionality of the embedding model output."""
-    return _get_model().get_sentence_embedding_dimension()
+    return 768  # nomic-embed-text-v1.5 output dimension
 
 
 def is_ready() -> bool:

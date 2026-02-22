@@ -2,7 +2,7 @@
 RAG Service HTTP client for the Agent Service.
 
 Calls the RAG service REST API (POST /api/search_docs, /api/search_code, etc.)
-over httpx. Falls back to local keyword search if the service is unreachable.
+over httpx. Returns None if the service is unreachable (caller handles fallback).
 
 The MCP SSE endpoint (/mcp/sse) is also available for direct MCP tool calls
 (e.g. from Claude Desktop or future agent improvements using tool-calling LLMs).
@@ -12,6 +12,7 @@ from __future__ import annotations
 import logging
 import os
 from typing import List, Optional
+from contextlib import contextmanager
 
 import httpx
 
@@ -23,6 +24,29 @@ RAG_TOOL_TIMEOUT = float(os.getenv("RAG_TOOL_TIMEOUT", "10"))
 # MCP SSE endpoint for external MCP clients
 RAG_MCP_SSE_URL = f"{RAG_SERVICE_URL}/mcp/sse"
 
+# Shared HTTP client with connection pooling
+# Using a Client (not AsyncClient) since all agent calls are synchronous
+_client = None
+
+def _get_client() -> httpx.Client:
+    """Get or create the shared HTTP client."""
+    global _client
+    if _client is None:
+        _client = httpx.Client(
+            base_url=RAG_SERVICE_URL,
+            timeout=RAG_TOOL_TIMEOUT,
+            limits=httpx.Limits(max_keepalive_connections=5, max_connections=10),
+        )
+    return _client
+
+
+def close_client():
+    """Close the shared HTTP client (call on shutdown)."""
+    global _client
+    if _client is not None:
+        _client.close()
+        _client = None
+
 
 # ---------------------------------------------------------------------------
 # Internal helpers
@@ -30,9 +54,10 @@ RAG_MCP_SSE_URL = f"{RAG_SERVICE_URL}/mcp/sse"
 
 def _post(path: str, body: dict) -> list | dict | None:
     """POST to the RAG service. Returns parsed JSON or None on failure."""
+    client = _get_client()
     url = f"{RAG_SERVICE_URL}{path}"
     try:
-        resp = httpx.post(url, json=body, timeout=RAG_TOOL_TIMEOUT)
+        resp = client.post(url, json=body)
         resp.raise_for_status()
         return resp.json()
     except httpx.ConnectError:
@@ -48,9 +73,10 @@ def _post(path: str, body: dict) -> list | dict | None:
 
 def _get(path: str, **params) -> dict | None:
     """GET from the RAG service."""
+    client = _get_client()
     url = f"{RAG_SERVICE_URL}{path}"
     try:
-        resp = httpx.get(url, params=params, timeout=RAG_TOOL_TIMEOUT)
+        resp = client.get(url, params=params)
         resp.raise_for_status()
         return resp.json()
     except Exception as e:

@@ -6,7 +6,7 @@ Strategy:
      - Multi-query: uses message + key_topics + technical_terms
      - Metadata filters: passes detected connector/destination/sync_mode
      - Merges docs + code results (RRF done server-side)
-  2. If RAG Service is unreachable → keyword fallback over local olake_docs.md.
+  2. If RAG Service is unreachable → return empty results (agent will ask for clarification).
 
 Sets state["doc_sufficient"] = True when top result score >= DOCS_ANSWER_THRESHOLD.
 """
@@ -72,11 +72,11 @@ def _to_retrieved_doc(r: dict) -> RetrievedDocument:
 
 
 # ---------------------------------------------------------------------------
-# Keyword fallback
+# Keyword fallback (last resort when RAG is down)
 # ---------------------------------------------------------------------------
 
 def _keyword_search(queries: List[str]) -> List[RetrievedDocument]:
-    """BM25-style TF keyword search over local olake_docs.md as a fallback."""
+    """Simple keyword search over local olake_docs.md as a last-resort fallback."""
     try:
         raw = load_olake_docs()
     except Exception:
@@ -131,9 +131,9 @@ def doc_retriever(state: ConversationState) -> ConversationState:
       3. message_text — raw fallback (put last; it's a question, not keywords)
 
     Retrieval priority:
-      1. RAG Service (reranked endpoint) — bi-encoder + cross-encoder
-      2. Direct Qdrant vector search   — local fallback, same semantic quality
-      3. (used to be keyword search — removed: it returns the same results every time)
+      1. RAG Service (reranked endpoint) — bi-encoder + cross-encoder rerank
+      2. RAG Service (bi-encoder only) — if reranker not ready
+      3. Keyword search over local file — last resort when RAG is unavailable
     """
     logger = get_logger()
     user_id = state["user_id"]
@@ -213,45 +213,37 @@ def doc_retriever(state: ConversationState) -> ConversationState:
                 f"(connector={connector!r}, dest={destination!r}, sync={sync_mode!r})"
             )
         else:
-            # ── Fallback: direct Qdrant vector search ─────────────────────
-            # The RAG HTTP service is down but we can query Qdrant directly.
-            # This gives proper semantic search — unlike the old keyword fallback
-            # which always returned the same fixed sections regardless of query.
+            # ── Fallback: keyword search over local file ─────────────────────
+            # RAG service is down. Use simple keyword search as last resort.
             state["rag_service_available"] = False
-            log.warning("RAG service unavailable — using direct Qdrant vector search")
-            try:
-                from agent._local_retriever import (
-                    search_docs as local_docs,
-                    search_code as local_code,
-                )
-                docs_raw  = local_docs(all_queries, top_k=Config.MAX_RETRIEVED_DOCS,
-                                       connector=connector, destination=destination,
-                                       sync_mode=sync_mode)
-                code_raw  = local_code(all_queries, top_k=3)
-                all_raw   = (docs_raw or []) + (code_raw or [])
-                seen_ids  = set()
-                for r in sorted(all_raw, key=lambda x: x.get("score", 0), reverse=True):
-                    cid = r.get("chunk_id", "")
-                    if cid and cid in seen_ids:
-                        continue
-                    seen_ids.add(cid)
-                    retrieved_docs.append(_to_retrieved_doc(r))
-                    if len(retrieved_docs) >= Config.MAX_RETRIEVED_DOCS:
-                        break
-                log.info(f"Direct Qdrant returned {len(retrieved_docs)} results")
-            except Exception as local_err:
-                log.warning(f"Direct Qdrant fallback failed: {local_err}")
-                # Last resort: keep retrieved_docs empty (reasoner will ask for clarification)
+            log.warning("RAG service unavailable — using keyword fallback")
+            retrieved_docs = _keyword_search(all_queries)
+            if retrieved_docs:
+                log.info(f"Keyword fallback returned {len(retrieved_docs)} results")
+            else:
+                log.warning("Keyword fallback also returned no results")
 
+        # ACCUMULATE docs across iterations instead of replacing
+        # This is critical for multi-iteration retrieval to work properly
+        existing_docs = state.get("retrieved_docs", [])
+        existing_ids = {d.url + d.title for d in existing_docs}  # dedup key
+        
+        # Add only new docs that weren't retrieved in previous iterations
+        for doc in retrieved_docs:
+            dedup_key = doc.url + doc.title
+            if dedup_key not in existing_ids:
+                existing_docs.append(doc)
+                existing_ids.add(dedup_key)
+        
         # Compute average score and doc_sufficient flag
         avg_score = (
-            sum(d.relevance_score for d in retrieved_docs) / len(retrieved_docs)
-            if retrieved_docs else 0.0
+            sum(d.relevance_score for d in existing_docs) / len(existing_docs)
+            if existing_docs else 0.0
         )
-        state["retrieved_docs"] = retrieved_docs
+        state["retrieved_docs"] = existing_docs
         state["docs_relevance_score"] = avg_score
         state["doc_sufficient"] = (
-            avg_score >= Config.DOCS_ANSWER_THRESHOLD and bool(retrieved_docs)
+            avg_score >= Config.DOCS_ANSWER_THRESHOLD and bool(existing_docs)
         )
 
         logger.log_docs_searched(

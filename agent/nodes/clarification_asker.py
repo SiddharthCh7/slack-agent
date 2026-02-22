@@ -50,7 +50,9 @@ Rules for questions:
   - Reference specific OLake concepts when relevant (connector, sync mode, destination, etc.)
   - Never compound multiple questions into one sentence
   - Never start with "Could you please" or "Would you be able to"
-  - Bad: "Could you kindly provide details about your PostgreSQL deployment type and version?"
+  - VERY IMPORTANT: ONLY ask about user-specific context (their version, their config, their logs, what database they use).
+  - NEVER ask the user about OLake system capabilities or if OLake supports a feature. You are the expert. If you internalize a gap like "I don't know if OLake has an API", DO NOT ask the user. Instead, ask them what they are trying to achieve.
+  - Bad: "Does OLake provide a REST API?" or "Could you kindly provide details about your PostgreSQL deployment type and version?"
   - Good: "What PostgreSQL version are you on?" and "Is this on RDS, Aurora, or self-hosted?"
 
 Return a JSON array of question strings. No preamble.
@@ -101,9 +103,9 @@ async def clarification_asker(state: ConversationState) -> Dict[str, Any]:
 
             prompt = f"""User asked: "{message_text}"
 Problem summary: {problem_summary}
-Information gaps: {gaps}
+Internal Agent Gaps: {gaps} (Do NOT ask the user to solve these gaps for you. Only ask for context about their setup.)
 
-Generate 1–2 clarifying questions. Return JSON array only."""
+Generate 1–2 clarifying questions about the USER'S specific setup or intent. Return JSON array only."""
 
             response = await get_chat_completion(
                 messages=[

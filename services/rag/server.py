@@ -164,13 +164,17 @@ def _run_ingest(path: str, reset: bool) -> dict:
 
     if prose_chunks:
         log.info(f"Embedding {len(prose_chunks)} doc chunks...")
-        prose_vecs = embed_documents([c.raw_text for c in prose_chunks])
+        texts = [c.text for c in prose_chunks]  # Use full text with breadcrumb
+        prose_vecs = embed_documents(texts)
         prose_count = upsert_chunks(Config.DOCS_COLLECTION, prose_chunks, prose_vecs)
+        log.info(f"Upserted {prose_count} doc chunks (dense-only)")
 
     if code_chunks:
         log.info(f"Embedding {len(code_chunks)} code chunks...")
-        code_vecs = embed_documents([c.raw_text for c in code_chunks])
+        texts = [c.text for c in code_chunks]  # Use full text with breadcrumb
+        code_vecs = embed_documents(texts)
         code_count = upsert_chunks(Config.CODE_COLLECTION, code_chunks, code_vecs)
+        log.info(f"Upserted {code_count} code chunks (dense-only)")
 
     return {
         "ok": True,
@@ -189,14 +193,13 @@ def _run_ingest(path: str, reset: bool) -> dict:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     log.info("RAG Service starting up...")
-    # Warm the embedding model in a background thread so the first search
-    # doesn't have 30s cold-start latency; health endpoint returns "ready: false"
-    # until model is loaded.
-    def _warm():
-        from embedder import _get_model
-        _get_model()
-        log.info("Embedding model warmed ✓")
-    threading.Thread(target=_warm, daemon=True).start()
+    import os
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    # Warm the embedding model synchronously to prevent PyTorch/Tokenizers thread deadlocks
+    # across uvicorn threads on macOS.
+    from embedder import _get_model
+    _get_model()
+    log.info("Embedding model warmed ✓")
     yield
     log.info("RAG Service shutting down.")
 
