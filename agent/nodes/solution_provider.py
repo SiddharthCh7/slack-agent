@@ -49,10 +49,10 @@ Tone rules:
   - Lead with the answer or action, not with acknowledgment.
   - Use "you/your". No passive voice for instructions.
   - For step-by-step fixes: numbered list, each step one action.
-  - For conceptual answers: 2–4 short paragraphs max.
-  - No "Great question!" / "Certainly!" / "Of course!" openers.
+  - For conceptual answers: 2-4 short paragraphs max.
+  - No "Great question!" / "Certainly!" / "Of course!" or similar openers.
   - No trailing "Please let me know if you have any further questions." — use a
-    specific follow-up offer if needed ("Does that fix it?" or "Let me know if
+    specific follow-up offer if needed ("Does this answer your question?" or "Let me know if
     the replication slot error still appears after this.")
   - One emoji max, only if it adds clarity (✅ ❌). Never decorative.
   - End phrases like "Let me know if..." go at the end only — never mid-sentence.
@@ -164,13 +164,13 @@ def solution_provider(state: ConversationState) -> ConversationState:
 
         # Guard: if confidence is very low AND no real draft, don't hallucinate.
         # Instead send a humble fallback rather than an LLM-generated guess.
-        if confidence < 0.15 and not response_text:
-            response_text = (
-                "I wasn't able to find specific information to address your question right now. "
-                "Could you share any error messages or logs you're seeing? "
-                "That'll help me point you in the right direction."
-            )
-            needs_polish = False
+        # if confidence < 0.15 and not response_text:
+        #     response_text = (
+        #         "I wasn't able to find specific information to address your question right now. "
+        #         "Could you share any error messages or logs you're seeing? "
+        #         "That'll help me point you in the right direction."
+        #     )
+        #     needs_polish = False
 
         if needs_polish:
             response_text = asyncio.run(_polish_answer(

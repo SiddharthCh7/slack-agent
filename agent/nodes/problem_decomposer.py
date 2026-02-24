@@ -50,10 +50,12 @@ Output this JSON object:
 }}
 
 Search query rules:
-- Short keyword phrases, NOT full questions
-- Include connector names, error keywords, technical terms
-- Skip vague phrases like "OLake setup" or "how to use OLake"
+- Short keyword phrases (2-4 words), NOT full questions
+- Include connector names (e.g., "mssql", "postgres"), error keywords, technical terms
+- Use exact technical terms from the message (e.g., "schema change", "CDC", "WAL")
+- Skip vague phrases like "OLake setup", "how to use OLake", "OLake connector"
 - Extract key error phrases verbatim if present
+- Prefer specific over generic: "mssql cdc schema" NOT "OLake mssql connector"
 
 Return ONLY valid JSON, no markdown."""
 

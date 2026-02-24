@@ -106,6 +106,7 @@ class ConversationState(TypedDict):
     max_retrieval_iterations: int         # cap (default 3)
     new_search_queries: List[str]         # queries from reasoner for next retrieval
     retrieval_history: List[str]          # all queries run so far (dedup across rounds)
+    retrieval_summaries: List[Dict[str, Any]]  # summary of what was retrieved each iteration
 
     # Reasoning process
     reasoning_iterations: List[ReasoningIteration]
@@ -218,6 +219,7 @@ def create_initial_state(event: Dict[str, Any]) -> ConversationState:
         max_retrieval_iterations=3,
         new_search_queries=[],
         retrieval_history=[],
+        retrieval_summaries=[],
 
         # Reasoning
         reasoning_iterations=[],

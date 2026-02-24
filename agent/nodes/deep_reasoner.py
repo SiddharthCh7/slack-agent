@@ -84,25 +84,38 @@ decide the best next action and produce a structured JSON output.
 
 DECISION OPTIONS:
   "ANSWER"         — you have enough context to give a complete, accurate answer
-  "CLARIFY"        — you need specific information from the user to proceed
+  "CLARIFY"        — you need specific information FROM THE USER'S ENVIRONMENT to proceed
   "RETRIEVE_MORE"  — you know which additional docs to look for; retrieve before answering
+
+DECISION FRAMEWORK (think in this order):
+  1. Is the user asking about THEIR setup (version, config, error logs, their data)?
+     → If yes and missing, use CLARIFY
+  2. Is the user asking about OLake's features, capabilities, or documentation?
+     → If docs have the answer → ANSWER
+     → If docs don't have it after searching → RETRIEVE_MORE (try different queries)
+     → If still not found after max iterations → ANSWER with what you know + note the gap
+  3. NEVER ask the user about what OLake does, what features exist, or what documentation says
+     — the user cannot know what's in OLake's documentation
 
 RULES:
   1. Prefer ANSWER over CLARIFY whenever possible. A partial answer with a follow-up note
      is better than making the user wait for information you might not need.
-  2. Only choose CLARIFY if missing user-specific info (version, config, error log) that
-     is genuinely required and cannot be inferred from the docs.
+  2. CLARIFY only for user-environment specifics: their version, their config, their error
+     messages, their data. NEVER clarify questions about product capabilities or docs.
   3. Only choose RETRIEVE_MORE if you can name specific topics/sections not yet retrieved.
      Do NOT use it to delay answering.
   4. If the thread already contains bot questions + user answers, use those answers.
      Do NOT ask the same question twice.
   5. Max 2 clarification questions. Make them specific, not compound.
-  6. Confidence: 0.0–1.0 reflecting how complete your answer is with current context.
+  6. Confidence meaning by decision:
+     - ANSWER: How complete/correct your answer is with current docs (0.5-1.0)
+     - CLARIFY: How confident you are that clarification is needed (should be 0.7-1.0)
+     - RETRIEVE_MORE: How likely more docs will help (0.5-0.8)
 
 OUTPUT FORMAT (always valid JSON, no markdown fences):
 {{
   "decision": "ANSWER" | "CLARIFY" | "RETRIEVE_MORE",
-  "confidence": 0.0–1.0,
+  "confidence": 0.0-1.0,
   "reasoning_trace": "Your step-by-step thinking (private, not shown to user)",
   "proposed_answer": "Draft answer in human-professional tone (only when decision=ANSWER)",
   "clarification_questions": ["Q1?", "Q2?"],  // only when decision=CLARIFY, max 2
@@ -120,10 +133,32 @@ def _build_docs_block(docs) -> str:
         content = doc.content if hasattr(doc, "content") else doc.get("content", "")
         url = doc.url if hasattr(doc, "url") else doc.get("url", "")
         score = doc.relevance_score if hasattr(doc, "relevance_score") else doc.get("score", 0)
+        # Include a 1-line summary of the doc content
+        first_line = content.split("\n")[0][:200] if content else ""
         blocks.append(
-            f"[Doc {i}] {title} (score={score:.2f}, url={url})\n{content[:600]}"
+            f"[Doc {i}] {title} (score={score:.2f}, url={url})\n"
+            f"Summary: {first_line}...\n"
+            f"Content: {content[:400]}"
         )
     return "\n\n---\n\n".join(blocks)
+
+
+def _build_retrieval_history_summary(iterations: List[ReasoningIteration], summaries: List[Dict[str, Any]]) -> str:
+    """Build a summary of what was retrieved in each previous iteration."""
+    if not summaries:
+        return ""
+    
+    lines = ["Retrieval History (what was searched and found):"]
+    for i, summary in enumerate(summaries, 1):
+        queries = summary.get("queries", [])
+        docs_found = summary.get("docs_found", 0)
+        doc_summary = summary.get("doc_summary", "")
+        queries_str = ", ".join(queries[:3]) if queries else "(initial query)"
+        lines.append(
+            f"  Iteration {i}: Searched for [{queries_str}] | "
+            f"Found {docs_found} docs: {doc_summary}"
+        )
+    return "\n".join(lines)
 
 
 def _build_thread_block(thread_context: List[Dict]) -> str:
@@ -153,12 +188,10 @@ async def deep_reasoner(state: ConversationState) -> Dict[str, Any]:
 
     docs_block   = _build_docs_block(retrieved_docs)
     thread_block = _build_thread_block(thread_context)
-
-    # Build previous reasoning summary if we've looped
-    prev_trace = ""
-    if prev_iterations:
-        last = prev_iterations[-1]
-        prev_trace = f"\nPrevious reasoning summary: {last.thought_process[:300]}"
+    
+    # Build retrieval history summary showing what was queried and found in each iteration
+    retrieval_summaries = state.get("retrieval_summaries", [])
+    retrieval_history = _build_retrieval_history_summary(prev_iterations, retrieval_summaries)
 
     user_prompt = f"""USER MESSAGE: "{message_text}"
 PROBLEM SUMMARY: {problem_summary}
@@ -166,14 +199,15 @@ PROBLEM SUMMARY: {problem_summary}
 SUB-QUESTIONS TO RESOLVE:
 {chr(10).join(f"  - {q}" for q in sub_questions) if sub_questions else "  (none — address message directly)"}
 
-RETRIEVED DOCUMENTATION:
+RETRIEVED DOCUMENTATION (accumulated across all iterations):
 {docs_block}
 
 THREAD HISTORY (most recent last):
 {thread_block if thread_block else "(no prior thread)"}
 
+{retrieval_history if retrieval_history else "(First retrieval iteration)"}
+
 RETRIEVAL ITERATIONS USED: {retrieval_iter}/{max_ret_iter}
-{prev_trace}
 
 Analyse. Decide. Output JSON only."""
 
