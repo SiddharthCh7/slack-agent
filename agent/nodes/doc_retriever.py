@@ -34,6 +34,7 @@ _CONNECTOR_PATTERNS = {
     "mongodb":   ["mongodb", "mongo", "oplog"],
     "oracle":    ["oracle"],
     "kafka":     ["kafka"],
+    "mssql":     ["mssql", "sql server", "microsoft sql", "ms sql", "sqlserver"],
 }
 _DEST_PATTERNS = {
     "iceberg": ["iceberg"],

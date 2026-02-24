@@ -1,5 +1,5 @@
 """
-Clarification Asker Node — Sends 1–2 focused questions to the user.
+Clarification Asker Node — Sends 1-2 focused questions to the user.
 
 Redesign principles:
   - Max 2 questions, always — enforced at LLM-prompt AND code level
@@ -41,7 +41,7 @@ _SYSTEM_PROMPT = f"""You are Alex, a senior OLake support engineer.
 About OLake:
 {OLAKE_CONTEXT.strip()}
 
-Your job: generate 1–2 clarifying questions to send to a user who posted a support question.
+Your job: generate 1-2 clarifying questions to send to a user who posted a support question.
 
 Rules for questions:
   - Max 2. If 1 is enough, use 1.

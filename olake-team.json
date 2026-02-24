@@ -16,6 +16,10 @@
             "role": "Backend Engineer",
             "desc": "Anything related to arrow writer is handled by him"
         },
+        "Vishal M": {
+            "role": "Backend Engineer",
+            "desc": "Anything related to MSSQL is handled by him"
+        },
         "Deepanshu Pal": {
             "role": "Frontend Engineer",
             "desc": "Any frontend issues is handled by him"
@@ -25,12 +29,6 @@
         "Schitiz Sharma": {
             "role": "DevOps Lead",
             "desc": "Handles any primary devops related issues, especially critical or important ones."
-        }
-    },
-    "Product": {
-        "Merlyn Mathew": {
-            "role": "Product Manager",
-            "desc": "Handles any product related issues"
         }
     }
 }
