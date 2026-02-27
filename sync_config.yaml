@@ -1,0 +1,113 @@
+# Incremental Code Documentation System Configuration
+# This file configures GitHub repo monitoring and code parsing settings
+
+# Codebases to monitor
+codebases:
+  # Example: Monitor the OLake project
+  - name: olake
+    repo_url: https://github.com/datazip-inc/olake
+    branch: master
+    poll_interval: 10800  # seconds (3 hours)
+    collection_name: codebase_olake
+    enabled: true
+
+
+# Processing settings for code parsing and chunking
+processing:
+  # Chunk strategies to apply (in order of priority)
+  chunk_strategies:
+    - function_level    # Primary: individual functions/methods
+    - class_level       # Secondary: full classes or class-level chunks
+    - module_level      # Tertiary: imports, constants, module sections
+
+  # Maximum tokens per chunk (chunks may exceed slightly to respect boundaries)
+  max_chunk_size: 1000
+
+  # Overlap tokens to include from parent context
+  overlap_tokens: 50
+
+  # Languages to parse (tree-sitter grammars must be available)
+  supported_languages:
+    - python
+    - javascript
+    - typescript
+    - go
+    - rust
+    - java
+
+  # Skip files matching these patterns
+  exclude_patterns:
+    - "**/test/**"
+    - "**/tests/**"
+    - "**/__pycache__/**"
+    - "**/node_modules/**"
+    - "**/vendor/**"
+    - "**/*.min.js"
+    - "**/dist/**"
+    - "**/build/**"
+
+  # Maximum file size to process (KB) - prevents memory exhaustion
+  # Files larger than this are skipped (often generated/minified code)
+  max_file_size_kb: 500
+
+  # Batch size for embedding generation
+  # Smaller batches prevent GPU memory exhaustion on M1 Macs
+  embedding_batch_size: 50
+
+# Cache settings (SQLite for local hash registry)
+cache:
+  type: sqlite
+  path: ./cache/codeparse.db
+
+  # Cache maintenance
+  vacuum_on_startup: false
+  max_cache_age_days: 30  # entries older than this may be cleaned
+
+# Sync retry settings (for resumable sync)
+sync:
+  # Maximum number of retry attempts for failed files
+  max_retries: 3
+  
+  # Time to wait before retrying failed files (seconds)
+  retry_wait_seconds: 5
+  
+  # Time to wait when rate limited (seconds)
+  rate_limit_wait_seconds: 3610
+  
+  # Maximum files to process in parallel
+  max_workers: 4
+  
+  # If true, pause on rate limit and resume automatically
+  pause_on_rate_limit: true
+
+# Qdrant vector database settings
+qdrant:
+  host: localhost
+  port: 6333
+  grpc_port: 6334
+  # Collection settings
+  vector_size: 768  # Must match embedding model output
+  distance: COSINE
+  # Indexing
+  create_payload_indexes: true
+  indexed_fields:
+    - file_path
+    - commit_hash
+    - language
+    - chunk_type
+    - repo_url
+
+# Background scheduler settings
+scheduler:
+  enabled: true
+  max_workers: 4  # parallel file processing
+  reload_config_on_change: true
+  config_check_interval: 60  # seconds
+
+# Logging settings
+logging:
+  level: INFO
+  file: ./logs/codeparse.log
+  max_size_mb: 50
+  backup_count: 5
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
