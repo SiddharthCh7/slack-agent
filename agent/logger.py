@@ -177,24 +177,22 @@ class StructuredLogger:
         self,
         iteration: int,
         thought_process: str,
-        confidence: float,
         user_id: str,
-        channel_id: str
+        channel_id: str,
     ) -> None:
         """Log a reasoning iteration."""
         reasoning_data = {
             "timestamp": datetime.now().isoformat(),
             "iteration": iteration,
             "thought_process": thought_process,
-            "confidence": confidence,
             "user_id": user_id,
-            "channel_id": channel_id
+            "channel_id": channel_id,
         }
-        
+
         self._write_jsonl(self.reasoning_log, reasoning_data)
-        
+
         self.logger.debug(
-            f"Reasoning iteration {iteration} | Confidence: {confidence:.2f} | "
+            f"Reasoning iteration {iteration} | "
             f"Thought: {thought_process[:100]}..."
         )
     
@@ -224,23 +222,21 @@ class StructuredLogger:
         user_id: str,
         channel_id: str,
         response_text: str,
-        confidence: float,
         reasoning_summary: str,
         thread_ts: Optional[str] = None,
-        docs_cited: Optional[list] = None
+        docs_cited: Optional[list] = None,
     ) -> None:
         """Log a response sent to user."""
         self.log_event(
             event_type=EventType.RESPONSE_SENT,
-            message=f"Response sent (confidence: {confidence:.2f})",
+            message="Response sent",
             user_id=user_id,
             channel_id=channel_id,
             thread_ts=thread_ts,
             metadata={
                 "response_text": response_text,
-                "confidence": confidence,
                 "reasoning_summary": reasoning_summary,
-                "docs_cited": docs_cited or []
+                "docs_cited": docs_cited or [],
             }
         )
     

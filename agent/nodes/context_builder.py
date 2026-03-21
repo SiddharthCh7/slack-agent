@@ -1,161 +1,89 @@
 """
-Context Builder Node — Loads user history, thread context, and detects org-member presence.
+Context Builder Node — Loads thread context and summary from DB.
 
-Key behaviors:
-  - Fetches thread messages from both the DB and Slack API
-  - Annotates each thread message with `is_bot` flag (True if sent by this OLake agent)
-  - Sets state["org_member_replied"] = True if any org team member has posted in the thread
-    (detection uses slack_name matching via agent.team)
+Behavior:
+  1. Resolve thread_id (thread_ts if present, else message_ts).
+  2. Upsert user and thread records in DB.
+  3. Load last 10 messages for the thread → state["thread_context"]
+     Each item: {role, content, message_ts}
+  4. Load thread summary → state["thread_summary"] (None on first message)
+  5. Log result and handle errors with safe fallback.
 """
 
 from typing import Dict, Any, List
 
 from agent.state import ConversationState
 from agent.persistence import get_database
-from agent.slack_client import create_slack_client
 from agent.logger import get_logger, EventType
-from agent.config import Config
-from agent.team import is_org_member_by_name, is_org_member_by_id, get_bot_user_id
 
 
 def build_context(state: ConversationState) -> ConversationState:
     """
-    Build context by loading user history and thread context.
+    Load thread context and summary from DB into state.
 
-    Also:
-    - Annotates thread messages with `is_bot` so the reasoner knows which messages
-      are already answered by the OLake agent.
-    - Sets `org_member_replied = True` if an org team member posted in the thread,
-      prompting the agent to stay silent.
-
-    Args:
-        state: Current conversation state
-
-    Returns:
-        Updated state with context loaded
+    Sets:
+      state["thread_context"]  — last 10 messages [{role, content, message_ts}, ...]
+      state["thread_summary"]  — latest consolidated summary string, or None
+      state["org_member_replied"] — always False (detection removed)
     """
     logger = get_logger()
     db = get_database()
-    slack_client = create_slack_client()
 
     user_id = state["user_id"]
     channel_id = state["channel_id"]
     thread_ts = state.get("thread_ts")
-    bot_user_id = get_bot_user_id()
+    message_ts = state.get("message_ts") or ""
+
+    # thread_id: use Slack thread_ts if this is a threaded message,
+    # otherwise use message_ts as the canonical thread identifier.
+    thread_id = thread_ts if thread_ts else message_ts
 
     try:
         # ----------------------------------------------------------------
-        # User profile
+        # Upsert user + thread (lightweight; no Slack API calls)
         # ----------------------------------------------------------------
-        user_profile = db.get_user_profile(user_id)
+        if user_id:
+            db.upsert_user(user_id=user_id)
 
-        if not user_profile:
-            user_info = slack_client.get_user_info(user_id)
-            profile_data = user_info.get("profile", {})
-            db.update_user_profile(
-                user_id=user_id,
-                username=user_info.get("name", ""),
-                real_name=profile_data.get("real_name", ""),
-                email=profile_data.get("email"),
-            )
-            user_profile = db.get_user_profile(user_id)
-
-        state["user_profile"] = user_profile
+        if thread_id:
+            db.upsert_thread(thread_id=thread_id, channel_id=channel_id)
 
         # ----------------------------------------------------------------
-        # Previous messages (cross-thread history for this user, for context)
-        # Capped at MAX_CONTEXT_MESSAGES (default 10) — that's why the count is often 10.
-        # ----------------------------------------------------------------
-        previous_messages = db.get_user_recent_messages(
-            user_id=user_id,
-            limit=Config.MAX_CONTEXT_MESSAGES,
-        )
-        state["previous_messages"] = previous_messages
-
-        # ----------------------------------------------------------------
-        # Thread context
+        # Thread context: last 10 messages, chronological
         # ----------------------------------------------------------------
         thread_context: List[Dict[str, Any]] = []
-        org_member_replied = False
+        if thread_id:
+            thread_context = db.get_thread_messages(thread_id, limit=10)
 
-        if thread_ts:
-            # Fetch from DB first
-            thread_context = db.get_thread_messages(thread_ts)
-
-            # Fetch from Slack API for latest messages not yet in DB
-            slack_thread = slack_client.get_thread_messages(
-                channel=channel_id,
-                thread_ts=thread_ts,
-                limit=20,  # raised from 10 to get richer thread context
-            )
-
-            existing_ts = {msg.get("message_ts") or msg.get("ts") for msg in thread_context}
-            for slack_msg in slack_thread:
-                ts = slack_msg.get("ts")
-                if ts not in existing_ts:
-                    thread_context.append(
-                        {
-                            "message_ts": ts,
-                            "user_id": slack_msg.get("user", ""),
-                            "user_query": slack_msg.get("text", ""),
-                            "created_at": ts,
-                        }
-                    )
-                    existing_ts.add(ts)
-
-            # Always include the current message (the one we're replying to) — it's not in DB or Slack yet
-            message_ts = state.get("message_ts") or state.get("ts", "")
-            if message_ts and message_ts not in existing_ts:
-                thread_context.append({
-                    "message_ts": message_ts,
-                    "user_id": user_id,
-                    "user_query": state.get("user_query", ""),
-                    "created_at": message_ts,
-                })
-
-            # Annotate each thread message
-            for msg in thread_context:
-                sender_id = msg.get("user_id", "")
-                sender_name = msg.get("display_name", "") or msg.get("username", "")
-
-                # Mark bot messages
-                is_bot = (bot_user_id and sender_id == bot_user_id)
-                msg["is_bot"] = bool(is_bot)
-
-                # Check if an org member posted (skip the bot itself)
-                if not is_bot:
-                    if is_org_member_by_id(sender_id) or (
-                        sender_name and is_org_member_by_name(sender_name)
-                    ):
-                        org_member_replied = True
-                        logger.logger.info(
-                            f"Org member detected in thread {thread_ts}: "
-                            f"user_id={sender_id}, name={sender_name}"
-                        )
+        # ----------------------------------------------------------------
+        # Thread summary
+        # ----------------------------------------------------------------
+        thread_summary = None
+        if thread_id:
+            thread_summary, _ = db.get_thread_summary(thread_id)
 
         state["thread_context"] = thread_context
-        state["org_member_replied"] = org_member_replied
+        state["thread_summary"] = thread_summary
+        state["org_member_replied"] = False
 
-        # ----------------------------------------------------------------
-        # Logging
-        # ----------------------------------------------------------------
+        print(
+            f"[ContextBuilder] ✓ thread_id={thread_id}  messages={len(thread_context)}  "
+            f"summary={'yes' if thread_summary else 'no'}"
+        )
+
         logger.log_event(
             event_type=EventType.CONTEXT_LOADED,
             message=(
-                f"Loaded context: {len(previous_messages)} previous messages (max {Config.MAX_CONTEXT_MESSAGES}), "
-                f"{len(thread_context)} thread messages, "
-                f"org_member_replied={org_member_replied}"
+                f"Context loaded: thread_id={thread_id}, "
+                f"messages={len(thread_context)}, "
+                f"summary={'yes' if thread_summary else 'no'}"
             ),
             user_id=user_id,
             channel_id=channel_id,
             metadata={
-                "user_profile": {
-                    "knowledge_level": user_profile.knowledge_level if user_profile else "beginner",
-                    "total_messages": user_profile.total_messages if user_profile else 0,
-                },
-                "previous_messages_count": len(previous_messages),
+                "thread_id": thread_id,
                 "thread_context_count": len(thread_context),
-                "org_member_replied": org_member_replied,
+                "has_summary": thread_summary is not None,
             },
         )
 
@@ -166,10 +94,8 @@ def build_context(state: ConversationState) -> ConversationState:
             user_id=user_id,
             channel_id=channel_id,
         )
-        # Safe fallback
-        state["user_profile"] = None
-        state["previous_messages"] = []
         state["thread_context"] = []
+        state["thread_summary"] = None
         state["org_member_replied"] = False
 
     return state

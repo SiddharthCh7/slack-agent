@@ -120,7 +120,7 @@ def list_conversations(
         cursor.execute(
             f"""
             SELECT id, message_ts, thread_ts, channel_id, user_id, user_query,
-                   intent_type, response_text, confidence,
+                   intent_type, response_text, ,
                    needs_clarification, escalated, escalation_reason,
                    docs_cited, reasoning_summary, processing_time,
                    created_at, resolved, resolved_at,
@@ -155,7 +155,7 @@ def get_conversation(conversation_id: int) -> Optional[Dict[str, Any]]:
         cursor.execute(
             """
             SELECT id, message_ts, thread_ts, channel_id, user_id, user_query,
-                   intent_type, response_text, confidence,
+                   intent_type, response_text, ,
                    needs_clarification, escalated, escalation_reason,
                    docs_cited, reasoning_summary, processing_time,
                    created_at, resolved, resolved_at,
@@ -238,7 +238,7 @@ def get_stats(source: Optional[str] = None) -> Dict[str, Any]:
                 COUNT(*) as total_conversations,
                 SUM(CASE WHEN resolved = 1 THEN 1 ELSE 0 END) as resolved_count,
                 SUM(CASE WHEN escalated = 1 THEN 1 ELSE 0 END) as escalated_count,
-                AVG(confidence) as avg_confidence,
+                AVG() as avg_,
                 AVG(processing_time) as avg_processing_time
             FROM conversations
         """)
@@ -247,7 +247,7 @@ def get_stats(source: Optional[str] = None) -> Dict[str, Any]:
         stats["total_conversations"] = stats.get("total_conversations") or 0
         stats["resolved_count"] = stats.get("resolved_count") or 0
         stats["escalated_count"] = stats.get("escalated_count") or 0
-        stats["avg_confidence"] = stats.get("avg_confidence") or 0.0
+        stats["avg_"] = stats.get("avg_") or 0.0
         stats["avg_processing_time"] = stats.get("avg_processing_time") or 0.0
 
         cursor.execute("SELECT COUNT(DISTINCT user_id) as unique_users FROM conversations")
@@ -262,7 +262,7 @@ def get_stats(source: Optional[str] = None) -> Dict[str, Any]:
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT id, channel_id, user_id, resolved, escalated, confidence, processing_time
+                SELECT id, channel_id, user_id, resolved, escalated, , processing_time
                 FROM conversations
             """)
             rows = cursor.fetchall()
@@ -273,13 +273,13 @@ def get_stats(source: Optional[str] = None) -> Dict[str, Any]:
         n = len(filtered)
         resolved_count = sum(1 for r in filtered if r["resolved"])
         escalated_count = sum(1 for r in filtered if r["escalated"])
-        confs = [r["confidence"] for r in filtered if r["confidence"] is not None]
+        confs = [r[""] for r in filtered if r[""] is not None]
         times = [r["processing_time"] for r in filtered if r["processing_time"] is not None]
         stats = {
             "total_conversations": n,
             "resolved_count": resolved_count or 0,
             "escalated_count": escalated_count or 0,
-            "avg_confidence": sum(confs) / len(confs) if confs else 0,
+            "avg_": sum(confs) / len(confs) if confs else 0,
             "avg_processing_time": sum(times) / len(times) if times else 0,
             "unique_users": len(set(r["user_id"] for r in filtered)),
         }

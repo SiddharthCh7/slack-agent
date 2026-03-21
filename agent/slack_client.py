@@ -259,7 +259,7 @@ class SlackClient:
         
         Args:
             response_text: Main response text
-            confidence: Confidence score (0-1)
+            confidence: confidence score (0-1)
             docs_cited: Optional list of cited documents
             is_clarification: Whether this is asking for clarification
             is_escalation: Whether this is an escalation
@@ -280,16 +280,16 @@ class SlackClient:
         
         # Add confidence indicator (only for solutions)
         if not is_clarification and not is_escalation and confidence > 0:
-            confidence_emoji = "✅" if confidence > 0.8 else "⚠️" if confidence > 0.5 else "❓"
-            confidence_text = (
-                f"{confidence_emoji} *Confidence:* {confidence:.0%}"
+            _emoji = "✅" if confidence > 0.8 else "⚠️" if confidence > 0.5 else "❓"
+            _text = (
+                f"{_emoji} *Confidence:* {confidence:.0%}"
             )
             
             blocks.append({
                 "type": "context",
                 "elements": [{
                     "type": "mrkdwn",
-                    "text": confidence_text
+                    "text": _text
                 }]
             })
         

@@ -41,7 +41,6 @@ get_logger(enable_console=False)
 from agent.state import create_initial_state
 from agent.cli_graph import get_cli_agent_graph
 from agent.github_repo_tracker import GitHubRepoTracker
-from agent.codebase_search import CodebaseSearchEngine
 
 # Configure Rich console
 console = Console(width=120)
@@ -337,19 +336,17 @@ Type 'commands' to see executed commands (coming soon).
 
         for i, file in enumerate(files[:10], 1):  # Show top 10
             self.console.print(f"\n[bold cyan]{i}.[/bold cyan] [yellow]{file.path}[/yellow]")
-            self.console.print(f"   [dim]Source: {file.source} | Language: {file.language} | Score: {len(file.matches)}[/dim]")
+            self.console.print(f"   [dim]Matches: {len(file.matches)}[/dim]")
             self.console.print(f"   [dim]Why: {file.retrieval_reason}[/dim]")
 
             if file.matches:
                 self.console.print(f"   [dim]Matches:[/dim]")
-                # Show more matches for directory structure files
-                max_matches = 20 if file.language == "directory" else 3
-                for match in file.matches[:max_matches]:
+                for match in file.matches[:3]:
                     display_match = match[:100] if len(match) > 100 else match
                     self.console.print(f"     [gray]• {display_match}[/gray]")
-            
+
             # Show content preview for small files
-            if file.content and file.language != "directory" and len(file.content) < 2000:
+            if file.content and len(file.content) < 2000:
                 self.console.print(f"   [dim]Content preview:[/dim]")
                 self.console.print(f"     [gray]{file.content[:500]}[/gray]")
 
@@ -360,17 +357,15 @@ Type 'commands' to see executed commands (coming soon).
         """Print research summary after agent processing."""
         thinking_log = state.get("thinking_log", [])
         research_files = state.get("research_files", [])
-        confidence = state.get("research_confidence", 0)
-        
+
         # Print thinking log
         if thinking_log:
             self.console.print("\n")
             for entry in thinking_log:
-                # Extract the thinking part after "Iteration X:"
                 if ": " in entry:
                     thinking = entry.split(": ", 1)[1]
                     self.print_thinking(thinking)
-        
+
         # Print files
         if research_files:
             self.console.print("\n")
@@ -379,9 +374,8 @@ Type 'commands' to see executed commands (coming soon).
         # Print summary
         self.console.print(f"\n[bold green]✓ Research Complete[/bold green]")
         self.console.print(
-            f"   [dim]Iterations: {state.get('research_iterations', 0)} | "
-            f"Files: {len(research_files)} | "
-            f"Confidence: {confidence:.1%}[/dim]\n"
+            f"   [dim]Iterations: {len(state.get('search_history') or [])} | "
+            f"Files: {len(research_files)}[/dim]\n"
         )
     
     def process_message(self, message: str) -> Optional[str]:
@@ -454,12 +448,10 @@ Type 'commands' to see executed commands (coming soon).
 
         # Short summary; full thinking/files available via 'thinking' and 'files' commands
         research_files = result.get("research_files", [])
-        confidence = result.get("research_confidence", 0)
         self.console.print(f"\n[bold green]✓ Research complete[/bold green]")
         self.console.print(
-            f"   [dim]Iterations: {result.get('research_iterations', 0)} | "
-            f"Files: {len(research_files)} | "
-            f"Confidence: {confidence:.1%}[/dim]"
+            f"   [dim]Iterations: {len(result.get('search_history') or [])} | "
+            f"Files: {len(research_files)}[/dim]"
         )
         self.console.print(
             "[dim]Type [cyan]thinking[/cyan] or [cyan]files[/cyan] for full details.[/dim]\n"

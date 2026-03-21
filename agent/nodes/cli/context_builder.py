@@ -1,10 +1,8 @@
 """
 Context builder for CLI mode.
 
-Lightweight context: no database, no Slack API, no org-member detection.
+Lightweight: no database, no Slack API. Sets empty thread context and no summary.
 """
-
-from typing import Dict, Any, List
 
 from agent.state import ConversationState
 from agent.logger import get_logger
@@ -14,29 +12,13 @@ def build_cli_context(state: ConversationState) -> ConversationState:
     """
     Build minimal context for CLI mode.
 
-    - No database access
-    - No Slack API calls
-    - No org member detection
-    - No user profile loading
-
-    Args:
-        state: Current conversation state
-
-    Returns:
-        Updated state with minimal context
+    Sets thread_context=[], thread_summary=None, org_member_replied=False.
     """
     logger = get_logger()
+    logger.logger.debug(f"[CLI Context] Built minimal context for user {state['user_id']}")
 
-    user_id = state["user_id"]
-    channel_id = state["channel_id"]
-
-    # Set minimal context
-    state["user_profile"] = None
-    state["previous_messages"] = []
     state["thread_context"] = []
-    state["org_member_replied"] = False  # Always False in CLI mode
-
-    # Log for debugging
-    logger.logger.debug(f"[CLI Context] Built minimal context for user {user_id}")
+    state["thread_summary"] = None
+    state["org_member_replied"] = False
 
     return state

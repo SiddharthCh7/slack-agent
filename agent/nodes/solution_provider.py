@@ -1,25 +1,31 @@
 """
-Solution Provider Node — Formats and sends the final answer in-thread.
+Solution Provider Node — Generates and sends the final answer in-thread.
 
-This node is invoked when research_confidence is high (>= 0.8). It strictly provides
-a solution based on research_files (from codebase search).
+Always invoked as the terminal node. Handles three cases:
+  1. deep_researcher hit an error → forward the error message as-is
+  2. No relevant files found (and not a conceptual question) → explicitly say so
+  3. Normal path → call LLM with retrieved context and post the answer
 """
 
 from __future__ import annotations
 import asyncio
-import json
-from datetime import datetime
+import logging
 from typing import Any, List
 
-from agent.state import ConversationState, ConversationRecord
+from agent.state import ConversationState
 from agent.slack_client import create_slack_client
 from agent.persistence import get_database
 from agent.logger import get_logger
 from agent.llm import get_chat_completion
 from agent.config import ABOUT_OLAKE
 
+log = logging.getLogger(__name__)
 
-_SOLUTION_SYSTEM_TEMPLATE = """CRITICAL — Voice: You speak as OLake. When referring to OLake or the team, always use "we"/"our" or "OLake". Never use "they" or "their" for OLake. Example: Bad: "They are faster than other tools." Good: "We are faster than other tools" or "OLake is faster than other tools."
+_NOT_ENOUGH_INFO = (
+    "Something went wrong. Please try again later."
+)
+
+_SOLUTION_SYSTEM_TEMPLATE = """CRITICAL — Voice: You speak as OLake. When referring to OLake or the team, always use "we"/"our" or "OLake". Never use "they" or "their" for OLake.
 
 You are Alex, a senior support engineer on the OLake team.
 
@@ -29,96 +35,101 @@ About OLake:
 Identity and voice:
   - You speak as part of OLake: use "we" and "our", never "they" or "their" for OLake.
   - Talk like a human teammate in Slack, not like an AI assistant.
-  - Never mention "the docs", "the reference files", "retrieved documents", "according to the information provided", or similar meta phrases.
-  - Do not describe your process (no "I looked at the docs", "based on these files", etc.). Just answer directly as if you already know the product well.
+  - Never mention "the docs", "the reference files", "retrieved documents", or similar meta phrases.
+  - Do not describe your process. Just answer directly as if you already know the product well.
 
-Your job: Answer the user's question using ONLY the internal files/code snippets provided. You MUST base your answer on that context.
+Your job: Answer the user's question using the internal files/code snippets provided below.
 
 Rules:
-  - If the files contain information that addresses the question, give a clear, concrete answer. Optional short follow-up question is fine.
-  - If the files do not contain enough to answer safely, respond with 1-3 specific clarifying questions. Do not guess or make up information.
-  - Lead with the substance (answer or questions), no preambles like "Sure" or "Great question".
-  - Use "you/your" when talking to the user. For procedural guidance, use short numbered or bulleted lists.
-  - Under ~300 words. Do not say "Based on the docs", "According to the info provided", "From the code", or any similar meta wording.
-  - Direct answer first: For yes/no or single-fact questions, give the answer in one clear sentence first, then add brief context or one short follow-up if needed. Do not lead with long explanation or multiple clarifying questions when a direct answer is possible from the context.
-  - Terminology and setup: Use the About OLake description when describing how OLake connects to sources and when answering questions about source-side settings or topology. When clarifying the user's setup, ask about which upstream OLake is connected to or how that upstream is configured (e.g. "Which instance is OLake reading from?" or "What sync mode are you using?"). Do not invent roles for OLake; follow the roles and connection model described in About OLake.
+  - Give a clear, concrete answer based on the provided context.
+  - If the context genuinely doesn't contain enough to answer, ask the user for more information or follow up questions — do NOT guess or make up information.
+  - Lead with the substance, no preambles like "Sure" or "Great question".
+  - Use "you/your" when talking to the user. For procedural steps, use short numbered or bulleted lists.
+  - Under ~300 words.
+  - Direct answer first: for yes/no or single-fact questions, give the answer in one clear sentence first.
+  - Use "we"/"our" or "OLake" when referring to OLake — never "they" or "their".
+
+NULL-RESULT GUIDANCE: If the Research Summary below lists an error string under "Null results", \
+this means the exact string does NOT exist as a hardcoded literal in the OLake source code — \
+it is assembled at runtime (e.g. via fmt.Sprintf). In that case:
+  1. Explicitly acknowledge that this is a runtime-generated validation message.
+  2. Explain the likely root cause from product knowledge and any docs found.
+  3. Give practical next steps (correct syntax, workaround, or link to docs).
+  Do NOT say "we couldn't find it" in a helpless way — explain WHY and what to do.
 
 Return only the final Slack message text — no JSON, no markdown fences."""
 
 
-def _solution_system_prompt(state: ConversationState) -> str:
-    about = (state.get("about_olake_summary") or ABOUT_OLAKE).strip()
-    return _SOLUTION_SYSTEM_TEMPLATE.format(about_olake=about)
+def _solution_system_prompt() -> str:
+    return _SOLUTION_SYSTEM_TEMPLATE.format(about_olake=ABOUT_OLAKE.strip())
 
 
 def _build_history_block(state: ConversationState, max_messages: int = 6) -> str:
-    """Build a short conversation history snippet from previous messages and thread context."""
     lines: List[str] = []
-    thread_messages = state.get("thread_context", []) or []
-    for msg in thread_messages[-max_messages:]:
-        user = msg.get("user_id") or msg.get("user") or msg.get("username") or "user"
-        text = (msg.get("user_query") or msg.get("text") or "").strip()
+    for msg in (state.get("thread_context") or [])[-max_messages:]:
+        text = (msg.get("content") or "").strip()
         if not text:
             continue
-        lines.append(f"- {user}: {text}")
-    if not lines:
-        return "(none)"
-    return "\n".join(lines[-max_messages:])
+        label = "agent" if msg.get("role") == "agent" else "user"
+        lines.append(f"- {label}: {text}")
+    return "\n".join(lines) if lines else "(none)"
 
 
-def _build_files_block(research_files: List[Any], max_files: int = 8, max_snippet: int = 220) -> str:
-    """Summarise retrieved files for the LLM."""
+def _build_files_block(research_files: List[Any], max_files: int = 8, max_snippet: int = 300) -> str:
     if not research_files:
         return "(none)"
     parts: List[str] = []
     for idx, f in enumerate(research_files[:max_files], 1):
         path = getattr(f, "path", "")
         reason = getattr(f, "retrieval_reason", "") or ""
-        content = getattr(f, "content", "") or ""
-        snippet = content.strip().replace("\n", " ")[:max_snippet]
+        snippet = (getattr(f, "content", "") or "").strip().replace("\n", " ")[:max_snippet]
         parts.append(f"{idx}. {path}\n   Why: {reason}\n   Snippet: {snippet}")
     return "\n".join(parts)
 
 
 async def _generate_solution(state: ConversationState) -> str:
-    """Generate the final answer from context. Always returns a solution (answer or clarifying questions)."""
     user_query = state["user_query"]
-    research_files = state.get("research_files", [])
+    research_files = state.get("research_files") or []
+    thread_summary = state.get("thread_summary") or ""
+    research_summary = (state.get("research_summary") or "").strip()
 
     history_block = _build_history_block(state)
     files_block = _build_files_block(research_files)
 
+    summary_section = f"\nThread summary (earlier context):\n{thread_summary}\n" if thread_summary else ""
+    research_summary_section = (
+        f"\nResearch Summary (what was searched):\n{research_summary}\n"
+        if research_summary else ""
+    )
+
     user_prompt = f"""User question:
 {user_query}
-
+{summary_section}{research_summary_section}
 Conversation so far (most recent messages last):
 {history_block}
 
-Internal files and code snippets to use for your answer:
+Internal files and code snippets:
 {files_block}
 
-Answer the question using the internal files above. If the files do not contain enough information, ask 1-3 short clarifying questions. Do not mention the files explicitly; just answer or ask.
+Answer the question using the context above. If the Research Summary lists the user's error string under \
+"Null results", apply the NULL-RESULT GUIDANCE from your system prompt.
 
-Use "we"/"our" or "OLake" when referring to OLake — never "they" or "their".
+Now write the final Slack message."""
 
-Now write the final Slack message text."""
+    print(f"(SolutionProvider) Input characters count: {len(user_prompt) + len(_solution_system_prompt())}")
 
     response = await get_chat_completion(
         messages=[
-            {"role": "system", "content": _solution_system_prompt(state)},
+            {"role": "system", "content": _solution_system_prompt()},
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.4,
     )
-    text = (response or "").strip()
-    return text
+    return (response or "").strip()
 
 
 def solution_provider(state: ConversationState) -> ConversationState:
-    """
-    Provide the final answer in-thread. Always returns a solution based on research_files.
-    No escalation; this node is only invoked when we have sufficient context (high research_confidence).
-    """
+    """Terminal node — always produces a response and sends it to the Slack thread."""
     logger = get_logger()
     db = get_database()
 
@@ -127,110 +138,56 @@ def solution_provider(state: ConversationState) -> ConversationState:
     thread_ts = state.get("thread_ts") or state["message_ts"]
     user_query = state["user_query"]
 
-    try:
-        slack_client = create_slack_client()
+    research_files = state.get("research_files") or []
+    is_conceptual = state.get("is_conceptual", False)
+    print(f"\n[SolutionProvider] Starting  files={len(research_files)}  is_conceptual={is_conceptual}")
+    log.info("[SolutionProvider] start files=%d conceptual=%s", len(research_files), is_conceptual)
 
-        # When DeepResearcher hit an error it sets research_error + response_text; send that instead of calling LLM
+    try:
+        # slack_client = create_slack_client()
+
+        # Case 1: deep_researcher encountered an unrecoverable error
         if state.get("research_error") and state.get("response_text"):
             final_message = (state["response_text"] or "").strip()
-            state["response_text"] = final_message
-            blocks = slack_client.format_response_blocks(
-                response_text=final_message,
-                confidence=state.get("research_confidence", 0.0),
-                docs_cited=None,
-                is_clarification=False,
-                is_escalation=False,
-            )
-            state["response_blocks"] = blocks
-            slack_client.send_message(channel=channel_id, text=final_message, thread_ts=thread_ts, blocks=blocks)
-            logger.logger.info(f"[SolutionProvider] sent error fallback message len={len(final_message)}")
-            try:
-                processing_time = (datetime.now() - state["processing_start_time"]).total_seconds()
-                retrieval_queries = json.dumps(state.get("retrieval_history", []))
-                retrieval_file_paths = json.dumps([f.path for f in state.get("research_files", [])])
-                db.save_conversation(ConversationRecord(
-                    id=None,
-                    message_ts=state["message_ts"],
-                    thread_ts=thread_ts,
-                    channel_id=channel_id,
-                    user_id=user_id,
-                    user_query=user_query,
-                    intent_type=str(state.get("intent_type", "")),
-                    response_text=final_message,
-                    confidence=state.get("research_confidence", 0.0),
-                    needs_clarification=False,
-                    escalated=False,
-                    escalation_reason=None,
-                    docs_cited=None,
-                    reasoning_summary=state.get("reasoning_trace", ""),
-                    processing_time=processing_time,
-                    created_at=datetime.now(),
-                    resolved=True,
-                    resolved_at=datetime.now(),
-                    retrieval_queries=retrieval_queries,
-                    retrieval_file_paths=retrieval_file_paths,
-                ))
-            except Exception:
-                pass
+            print(f"[SolutionProvider] ✗ Research error path — sending error message ({len(final_message)} chars)")
+            log.warning("[SolutionProvider] research error fallback len=%d", len(final_message))
+            # slack_client.send_message(channel=channel_id, text=final_message, thread_ts=thread_ts)
+            # _persist(db, logger, thread_ts, user_id, user_query, state["message_ts"], final_message)
+
+            print(f"[SolutionProvider] Error message: {final_message}")
+
             return state
 
+        # Case 2: no files found and it wasn't a conceptual question → explicit admission
+        if not research_files and not is_conceptual:
+            print("[SolutionProvider] ⚠ No research files found — sending not-enough-info message")
+            log.info("[SolutionProvider] no files, not conceptual — sending not-enough-info")
+            # slack_client.send_message(channel=channel_id, text=_NOT_ENOUGH_INFO, thread_ts=thread_ts)
+            state["response_text"] = _NOT_ENOUGH_INFO
+            # _persist(db, logger, thread_ts, user_id, user_query, state["message_ts"], _NOT_ENOUGH_INFO)
+            print(f"[SolutionProvider] Not enough info message: {_NOT_ENOUGH_INFO}")
+            return state
+
+        # Case 3: normal path — generate answer with LLM
+        print(f"[SolutionProvider] 🤖 Generating answer (files={len(research_files)}, conceptual={is_conceptual})...")
+        log.info("[SolutionProvider] generating answer files=%d", len(research_files))
         try:
             final_message = asyncio.run(_generate_solution(state))
-            print("solution_provider: final_message 01:", final_message)
         except Exception as gen_err:
-            logger.logger.warning(f"[SolutionProvider] LLM call failed: {gen_err}. Sending minimal fallback.")
-            final_message = ""
-        final_message = (final_message or "").strip()
-        print("solution_provider: final_message 02:", final_message)
+            print(f"[SolutionProvider] ✗ LLM generation failed: {gen_err}")
+            logger.logger.warning("[SolutionProvider] LLM call failed: %s", gen_err)
+            final_message = _NOT_ENOUGH_INFO
+
+        final_message = (final_message or _NOT_ENOUGH_INFO).strip()
         state["response_text"] = final_message
 
-        blocks = slack_client.format_response_blocks(
-            response_text=final_message,
-            confidence=state.get("research_confidence", 0.0),
-            docs_cited=None,
-            is_clarification=False,
-            is_escalation=False,
-        )
-        state["response_blocks"] = blocks
+        print(f"[SolutionProvider] Answer message: {final_message}")
+        print("-"*100)
+        print(f"[SolutionProvider] ✓ Answer ready ({len(final_message)} chars) — sending to Slack")
+        log.info("[SolutionProvider] answer len=%d", len(final_message))
+        # slack_client.send_message(channel=channel_id, text=final_message, thread_ts=thread_ts)
 
-        slack_client.send_message(
-            channel=channel_id,
-            text=final_message,
-            thread_ts=thread_ts,
-            blocks=blocks,
-        )
-
-        logger.logger.info(f"[SolutionProvider] sent answer len={len(final_message)}")
-
-        try:
-            processing_time = (datetime.now() - state["processing_start_time"]).total_seconds()
-            retrieval_queries = json.dumps(state.get("retrieval_history", []))
-            retrieval_file_paths = json.dumps([f.path for f in state.get("research_files", [])])
-            needs_clarification = "?" in final_message
-            db.save_conversation(ConversationRecord(
-                id=None,
-                message_ts=state["message_ts"],
-                thread_ts=thread_ts,
-                channel_id=channel_id,
-                user_id=user_id,
-                user_query=user_query,
-                intent_type=str(state.get("intent_type", "")),
-                response_text=final_message,
-                confidence=state.get("research_confidence", 0.0),
-                needs_clarification=needs_clarification,
-                escalated=False,
-                escalation_reason=None,
-                docs_cited=None,
-                reasoning_summary=state.get("reasoning_trace", ""),
-                processing_time=processing_time,
-                created_at=datetime.now(),
-                resolved=True,
-                resolved_at=datetime.now(),
-                retrieval_queries=retrieval_queries,
-                retrieval_file_paths=retrieval_file_paths,
-            ))
-        except Exception:
-            pass
+        # _persist(db, logger, thread_ts, user_id, user_query, state["message_ts"], final_message)
 
     except Exception as e:
         logger.log_error(
@@ -241,3 +198,12 @@ def solution_provider(state: ConversationState) -> ConversationState:
         )
 
     return state
+
+
+def _persist(db, logger, thread_ts: str, user_id: str, user_query: str, message_ts: str, agent_reply: str) -> None:
+    try:
+        db.save_message(thread_ts, user_id, "user", user_query, message_ts)
+        db.save_message(thread_ts, None, "agent", agent_reply, message_ts + "_agent")
+        logger.logger.info("[SolutionProvider] persisted user+agent messages")
+    except Exception as persist_err:
+        logger.logger.warning("[SolutionProvider] failed to persist messages: %s", persist_err)

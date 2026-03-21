@@ -36,8 +36,8 @@ class Config:
     
     # Agent Behavior
     MAX_REASONING_ITERATIONS: int = int(os.getenv("MAX_REASONING_ITERATIONS", "5"))
-    CONFIDENCE_THRESHOLD_FOR_AUTO_REPLY: float = float(
-        os.getenv("CONFIDENCE_THRESHOLD_FOR_AUTO_REPLY", "0.75")
+    _THRESHOLD_FOR_AUTO_REPLY: float = float(
+        os.getenv("_THRESHOLD_FOR_AUTO_REPLY", "0.75")
     )
     ENABLE_DEEP_REASONING: bool = os.getenv("ENABLE_DEEP_REASONING", "true").lower() == "true"
     ENABLE_USER_LEARNING: bool = os.getenv("ENABLE_USER_LEARNING", "true").lower() == "true"
@@ -75,7 +75,7 @@ class Config:
     # Deep Research Agent
     MAX_RESEARCH_ITERATIONS: int = int(os.getenv("MAX_RESEARCH_ITERATIONS", "5"))
     MAX_CONTEXT_FILES: int = int(os.getenv("MAX_CONTEXT_FILES", "15"))
-    MIN_CONFIDENCE_TO_STOP: float = float(os.getenv("MIN_CONFIDENCE_TO_STOP", "0.7"))
+    MIN__TO_STOP: float = float(os.getenv("MIN__TO_STOP", "0.7"))
     RESEARCH_TIMEOUT_SECONDS: int = int(os.getenv("RESEARCH_TIMEOUT_SECONDS", "120"))
 
     @classmethod
@@ -122,16 +122,14 @@ class Config:
         print(f"LLM Provider: {cls.LLM_PROVIDER}")
         print(f"Slack Bot Token: {mask_secret(cls.SLACK_BOT_TOKEN)}")
         print(f"Max Reasoning Iterations: {cls.MAX_REASONING_ITERATIONS}")
-        print(f"Confidence Threshold: {cls.CONFIDENCE_THRESHOLD_FOR_AUTO_REPLY}")
+        print(f" Threshold: {cls._THRESHOLD_FOR_AUTO_REPLY}")
         print(f"Deep Reasoning Enabled: {cls.ENABLE_DEEP_REASONING}")
         print(f"User Learning Enabled: {cls.ENABLE_USER_LEARNING}")
         print(f"Database Path: {cls.DATABASE_PATH}")
         print(f"Webhook Port: {cls.WEBHOOK_PORT}")
         print(f"Log Level: {cls.LOG_LEVEL}")
-        print(f"Terminal Tool Enabled: {cls.TERMINAL_TOOL_ENABLED}")
-        print(f"Max Research Iterations: {cls.MAX_RESEARCH_ITERATIONS}")
         print(f"Max Context Files: {cls.MAX_CONTEXT_FILES}")
-        print(f"Min Confidence to Stop: {cls.MIN_CONFIDENCE_TO_STOP}")
+        print(f"Min  to Stop: {cls.MIN__TO_STOP}")
         print("=" * 50 + "\n")
 
 

@@ -138,16 +138,16 @@ def print_research_files(files: List[Any], iteration: int = None):
 
 
 # ── pretty decision printer ───────────────────────────────────────────────
-def print_decision(intent: str, confidence: float,
+def print_decision(intent: str, : float,
                    should_escalate: bool = False, escalation_reason: str = None):
     """Pretty print agent decision."""
-    conf_color = GREEN if confidence >= 0.7 else YELLOW if confidence >= 0.4 else RED
+    conf_color = GREEN if  >= 0.7 else YELLOW if  >= 0.4 else RED
     
     print(f"\n{BOX_TL}{BOX_H*58}{BOX_TR}")
     print(f"{BOX_V} {BOLD}{CYAN}🧠 AGENT DECISION{RESET}".ljust(58) + f"{BOX_V}")
     print(f"{BOX_V}{BOX_H*56}{BOX_V}")
     print(f"{BOX_V}  Intent:    {BOLD}{intent}{RESET}".ljust(58) + f"{BOX_V}")
-    print(f"{BOX_V}  Confidence: {conf_color}{confidence:.0%}{RESET}".ljust(58) + f"{BOX_V}")
+    print(f"{BOX_V}  : {conf_color}{:.0%}{RESET}".ljust(58) + f"{BOX_V}")
     
     if should_escalate:
         print(f"{BOX_V}  {RED}⚠ ESCALATION TRIGGERED{RESET}".ljust(58) + f"{BOX_V}")
@@ -206,10 +206,10 @@ def print_agent_steps(steps: List[Dict[str, Any]]) -> None:
 
 # ── pretty final result printer ───────────────────────────────────────────
 def print_final_result(response: str, latency: float, docs_count: int,
-                       confidence: float, 
+                       : float, 
                        clarification_questions: List[str] = None):
     """Pretty print final result with latency."""
-    conf_color = GREEN if confidence >= 0.7 else YELLOW if confidence >= 0.4 else RED
+    conf_color = GREEN if  >= 0.7 else YELLOW if  >= 0.4 else RED
     section_header("FINAL RESULT")
     
     # Response
@@ -240,7 +240,7 @@ def print_final_result(response: str, latency: float, docs_count: int,
     print(f"{BOX_V}{BOX_H*56}{BOX_V}")
     print(f"{BOX_V}  Total Latency:    {GREEN}{latency:.2f}s{RESET}".ljust(58) + f"{BOX_V}")
     print(f"{BOX_V}  Docs Retrieved:   {CYAN}{docs_count}{RESET}".ljust(58) + f"{BOX_V}")
-    print(f"{BOX_V}  Final Confidence: {conf_color}{confidence:.0%}{RESET}".ljust(58) + f"{BOX_V}")
+    print(f"{BOX_V}  Final : {conf_color}{:.0%}{RESET}".ljust(58) + f"{BOX_V}")
     print(f"{BOX_BL}{BOX_H*58}{BOX_BR}")
 
 
@@ -458,12 +458,12 @@ def _patch_slack_for_local_testing():
             def get_thread_messages(self, channel, thread_ts, limit=10):
                 return []
 
-            def format_response_blocks(self, response_text, confidence,
+            def format_response_blocks(self, response_text, ,
                                        docs_cited=None, is_clarification=False,
                                        is_escalation=False):
                 from agent.slack_client import SlackClient
                 return SlackClient.format_response_blocks(
-                    self, response_text, confidence,
+                    self, response_text, ,
                     docs_cited, is_clarification, is_escalation
                 )
 
@@ -560,7 +560,7 @@ def print_result(result: dict, iteration: int = None):
 
     # Intent and decision
     intent = state.get("intent_type")
-    confidence = state.get("final_confidence", 0.0)
+     = state.get("", 0.0)
     intent_str = intent.value if intent else "?"
     
     # Escalation
@@ -570,7 +570,7 @@ def print_result(result: dict, iteration: int = None):
     # Print decision
     print_decision(
         intent=intent_str,
-        confidence=confidence,
+        =,
         should_escalate=should_escalate,
         escalation_reason=escalation_reason
     )
@@ -599,7 +599,7 @@ def print_result(result: dict, iteration: int = None):
         response=response,
         latency=elapsed,
         docs_count=len(research_files),
-        confidence=confidence,
+        =,
         clarification_questions=clarification_questions
     )
 

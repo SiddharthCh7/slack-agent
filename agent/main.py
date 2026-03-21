@@ -179,9 +179,8 @@ def process_message(event_data: Dict[str, Any]) -> None:
 
         logger.logger.info(
             f"Message processed. "
-            f"Confidence: {final_state.get('final_confidence', 0):.2f}, "
-            f"Escalated: {final_state.get('should_escalate', False)}, "
-            f"OrgMemberSilenced: {final_state.get('org_member_replied', False)}"
+            f"OrgMemberSilenced: {final_state.get('org_member_replied', False)}, "
+            f"ResponseLen: {len(final_state.get('response_text') or '')}"
         )
 
     except Exception as e:

@@ -13,10 +13,9 @@ Redesign principles:
 
 from __future__ import annotations
 import asyncio
-from datetime import datetime
 from typing import Dict, Any, List
 
-from agent.state import ConversationState, ConversationRecord
+from agent.state import ConversationState
 from agent.slack_client import create_slack_client
 from agent.persistence import get_database
 from agent.logger import get_logger, EventType
@@ -132,31 +131,9 @@ Generate 1-2 clarifying questions about the USER'S specific setup or intent. Ret
 
         # Persist
         try:
-            processing_time = (datetime.now() - state["processing_start_time"]).total_seconds()
-            retrieval_queries = json.dumps(state.get("retrieval_history", [])) if state.get("retrieval_history") else None
-            retrieval_file_paths = json.dumps([f.path for f in state.get("research_files", [])]) if state.get("research_files") else None
-            db.save_conversation(ConversationRecord(
-                id=None,
-                message_ts=state["message_ts"],
-                thread_ts=thread_ts,
-                channel_id=channel_id,
-                user_id=user_id,
-                user_query=user_query,
-                intent_type=str(state.get("intent_type", "")),
-                response_text=message_body,
-                confidence=state.get("final_confidence", 0.0),
-                needs_clarification=True,
-                escalated=False,
-                escalation_reason=None,
-                docs_cited=None,
-                reasoning_summary=state.get("reasoning_trace", ""),
-                processing_time=processing_time,
-                created_at=datetime.now(),
-                resolved=False,
-                resolved_at=None,
-                retrieval_queries=retrieval_queries,
-                retrieval_file_paths=retrieval_file_paths,
-            ))
+            message_ts = state["message_ts"]
+            db.save_message(thread_ts, user_id, "user", user_query, message_ts)
+            db.save_message(thread_ts, None, "agent", message_body, message_ts + "_agent")
         except Exception:
             pass
 

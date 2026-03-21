@@ -9,10 +9,8 @@ the main agent are tested and reflected in prod.
 
 from agent.nodes.cli.context_builder import build_cli_context
 from agent.nodes.cli.solution_provider import cli_solution_provider
-from agent.nodes.cli.relevance_filter import cli_relevance_filter
 
 __all__ = [
     "build_cli_context",
     "cli_solution_provider",
-    "cli_relevance_filter",
 ]
