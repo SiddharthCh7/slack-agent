@@ -41,7 +41,8 @@ log = logging.getLogger(__name__)
 # Inject a SYSTEM NOTE into the next iteration when the same pattern is seen this many times.
 _SAME_PATTERN_WARN_THRESHOLD = 2
 # Force actions=[] (immediate hand-off) when the same pattern is seen this many times.
-_SAME_PATTERN_FORCE_PIVOT = 3
+# Lowered from 3 to 2 to catch loops earlier and avoid wasted iterations.
+_SAME_PATTERN_FORCE_PIVOT = 2
 # Inject a SYSTEM NOTE after this many consecutive iterations that added zero new files.
 _ZERO_NEW_FILES_INJECT_THRESHOLD = 3
 # Force exit (hand-off) after this many consecutive zero-gain iterations.
@@ -381,9 +382,16 @@ def _normalize_pattern(action: Dict[str, Any]) -> str:
     Produce a normalized fingerprint for a search action so we can detect
     when the planner is repeating the same query.  Lowercases and strips
     leading/trailing whitespace and quote characters.
+    
+    Includes tool + path in the key to distinguish searches with same pattern
+    but different scopes (e.g., search_code vs find_definitions, or path="all" vs specific repo).
     """
-    raw = action.get("pattern") or action.get("symbol") or ""
-    return raw.lower().strip().strip("\"'")
+    tool = action.get("tool", "")
+    raw = action.get("pattern") or action.get("symbol", "")
+    path = action.get("path", "all")
+    # Normalize: tool|path|pattern for more accurate deduplication
+    normalized = f"{tool}|{path}|{raw}".lower().strip().strip("\"'")
+    return normalized
 
 
 # ---------------------------------------------------------------------------
@@ -538,6 +546,7 @@ class DeepResearcher:
                         if key:
                             pattern_seen_counts[key] = pattern_seen_counts.get(key, 0) + 1
                             count = pattern_seen_counts[key]
+                            print(f"[DeepResearcher]   🔍 Pattern tracker: {key[:70]!r} seen {count}x")
                             if count >= _SAME_PATTERN_FORCE_PIVOT:
                                 print(f"[DeepResearcher]   ⚠ Force-pivot: pattern seen {count}x — {key[:80]!r}")
                                 log.info("[DeepResearcher] force-pivot pattern=%r count=%d", key[:80], count)
@@ -746,7 +755,9 @@ class DeepResearcher:
                 history_entry = (
                     f"Iteration {iteration}\n"
                     f"  Intent: {search_intent}\n"
-                    f"  Thinking: {(thinking or '').strip()[:220]}\n\n"
+                    f"  Thinking: {(thinking or '').strip()[:300]}\n"
+                    f"  Actions: {len(actions)} tool calls\n"
+                    f"  Results: {added_this_iter} new files found\n"
                     + "\n\n".join(action_blocks)
                 )
                 search_history_entries.append(history_entry)

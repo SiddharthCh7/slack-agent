@@ -84,7 +84,7 @@ class Config:
     OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "anthropic/claude-sonnet-4-5")
     OPENROUTER_BASE_URL: str = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
-    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "llama3.2")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "lfm2.5-thinking:latest")
 
     # Slack
     SLACK_BOT_TOKEN: str = os.getenv("SLACK_BOT_TOKEN", "")
@@ -123,7 +123,7 @@ class Config:
     TERMINAL_TOOL_CONFIG: Path = _CONFIG_DIR / "terminal_allowed_commands.yaml"
 
     # LLM request timeout
-    LLM_REQUEST_TIMEOUT_SECONDS: int = int(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "90"))
+    LLM_REQUEST_TIMEOUT_SECONDS: int = int(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "200"))
 
     # Deep Research Agent
     MAX_RESEARCH_ITERATIONS: int = int(os.getenv("MAX_RESEARCH_ITERATIONS", "20"))
