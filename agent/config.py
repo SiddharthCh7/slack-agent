@@ -63,8 +63,8 @@ COMPANY_VOICE: str = _agent_cfg.get(
 # Company knowledge — loaded from config/*.md
 # ─────────────────────────────────────────────────────────────────────────────
 
-ABOUT_COMPANY: str = _load_text(_CONFIG_DIR / "about.md")
-ABOUT_REPOS: str = _load_text(_CONFIG_DIR / "repos.md")
+ABOUT_PRODUCT: str = _load_text(_CONFIG_DIR / "about_product.md")
+ABOUT_REPOS: str = _load_text(_CONFIG_DIR / "about_repos.md")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -84,7 +84,7 @@ class Config:
     OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "anthropic/claude-sonnet-4-5")
     OPENROUTER_BASE_URL: str = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
-    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "llama3.2")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "lfm2.5-thinking:latest")
 
     # Slack
     SLACK_BOT_TOKEN: str = os.getenv("SLACK_BOT_TOKEN", "")

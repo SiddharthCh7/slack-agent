@@ -21,10 +21,10 @@ from __future__ import annotations
 import asyncio
 from typing import Any, Dict, List, Optional
 
-from agent.config import AGENT_NAME, COMPANY_NAME, ABOUT_COMPANY
+from agent.config import AGENT_NAME, COMPANY_NAME, ABOUT_PRODUCT
 from agent.state import ConversationState
-from agent.llm import get_chat_completion
-from agent.logger import get_logger
+from agent.utils.llm import get_chat_completion
+from agent.utils.logger import get_logger
 from agent.utils.parser import parse_llm_json
 
 
@@ -32,7 +32,7 @@ def _build_system_prompt() -> str:
     return f"""\
 You are a strict message classifier for a {COMPANY_NAME} community support agent.
 
-{ABOUT_COMPANY[:800]}
+{ABOUT_PRODUCT}
 
 Your job: classify the incoming user message and output ONLY a JSON object — \
 no markdown fences, no explanation.
@@ -94,6 +94,7 @@ async def _classify(
     thread_summary: Optional[str],
     thread_context: List[Dict[str, Any]],
 ) -> dict:
+    print(f"(GateFilter) User query: {user_query}")
     system_prompt = _build_system_prompt()
     summary = f'\nThread summary: """{thread_summary}"""' if thread_summary else ""
     context = f"\nThread context (recent messages): {thread_context}" if thread_context else ""

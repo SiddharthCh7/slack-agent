@@ -13,7 +13,7 @@ from typing import Dict, List, Optional, Any
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-from agent.logger import get_logger
+from agent.utils.logger import get_logger
 
 
 class SlackClient:

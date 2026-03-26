@@ -34,7 +34,7 @@ import readline  # For better input handling
 
 # Disable console logging for CLI mode BEFORE importing other agent modules
 # This must happen before importing any modules that use get_logger()
-from agent.logger import get_logger
+from agent.utils.logger import get_logger
 get_logger(enable_console=False)
 
 # Now import other agent modules
@@ -46,7 +46,7 @@ from agent.github_repo_tracker import GitHubRepoTracker
 console = Console(width=120)
 
 # Configure logging - disable Rich handler to avoid duplicate logs
-# Only use the structured logger from agent.logger
+# Only use the structured logger from agent.utils.logger
 logging.basicConfig(
     level=logging.WARNING,  # Only show warnings and above
     format="%(message)s",

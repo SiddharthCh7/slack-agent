@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple
 from urllib.parse import urlparse
 
-from agent.logger import get_logger
+from agent.utils.logger import get_logger
 
 Backend = Literal["sqlite", "postgres"]
 

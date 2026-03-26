@@ -1,3 +1,5 @@
+# Not yet used
+
 """
 Thread Summariser — independent DB-aware component.
 
@@ -24,8 +26,8 @@ import logging
 from typing import Dict, List, Optional
 
 from agent.config import AGENT_NAME, COMPANY_NAME
-from agent.llm import get_chat_completion
-from agent.persistence import get_database
+from agent.utils.llm import get_chat_completion
+from agent.filesystem.persistence import get_database
 from agent.utils.parser import parse_llm_json
 
 log = logging.getLogger(__name__)

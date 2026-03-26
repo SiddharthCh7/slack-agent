@@ -21,8 +21,8 @@ from agent.config import Config, AGENT_NAME, COMPANY_NAME
 from agent.slack_client import create_slack_client
 from agent.graph import get_agent_graph
 from agent.state import create_initial_state
-from agent.logger import get_logger
-from agent.persistence import get_database
+from agent.utils.logger import get_logger
+from agent.filesystem.persistence import get_database
 from agent.team import (
     load_team,
     build_name_to_id_cache,

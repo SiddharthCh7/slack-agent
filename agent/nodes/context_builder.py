@@ -13,8 +13,8 @@ Behavior:
 from typing import Dict, Any, List
 
 from agent.state import ConversationState
-from agent.persistence import get_database
-from agent.logger import get_logger
+from agent.filesystem.persistence import get_database
+from agent.utils.logger import get_logger
 
 
 def build_context(state: ConversationState) -> ConversationState:

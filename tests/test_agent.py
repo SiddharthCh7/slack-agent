@@ -616,7 +616,7 @@ def main():
     args = parser.parse_args()
 
     # Disable agent console logging so Rich Live progress display is not overwritten by INFO lines
-    from agent.logger import get_logger
+    from agent.utils.logger import get_logger
     get_logger(enable_console=False)
 
     header("OLake Community Agent — Local Test Harness")

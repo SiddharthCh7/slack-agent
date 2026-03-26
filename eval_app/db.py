@@ -4,7 +4,7 @@ Read-only database layer for the evaluation dashboard.
 Reads the same database as the agent (SQLite or PostgreSQL) using the shared
 persistence backend. No writes are performed here.
 
-Schema used (from agent/persistence.py):
+Schema used (from agent/filesystem/persistence.py):
   threads          — thread_id, channel_id, created_at, updated_at
   messages         — id, thread_id, user_id, role, content, message_ts, created_at
   thread_summaries — thread_id, summary, summarised_through_ts, updated_at
@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Tuple
 
-from agent.persistence import get_database
+from agent.filesystem.persistence import get_database
 
 # Channel/user patterns that indicate a local test run (test_agent.py)
 _LOCAL_TEST_CHANNELS = {"", "C_LOCAL_TEST", "C99TESTCHAN"}

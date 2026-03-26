@@ -15,7 +15,7 @@ from agent.state import ConversationState
 from agent.nodes.gate_filter import gate_filter
 from agent.nodes.deep_researcher import deep_researcher
 from agent.nodes.cli import build_cli_context, cli_solution_provider
-from agent.logger import get_logger
+from agent.utils.logger import get_logger
 
 
 def route_after_gate(

@@ -172,78 +172,53 @@ class GitHubRepoTracker:
     
     def sync_repo(self, name: str) -> Dict[str, Any]:
         """
-        Sync a repository via git fetch upstream (no GitHub API).
-        Ensures upstream remote exists, fetches from it, then merges into current branch.
-        
+        Sync a repository with git pull from origin (no GitHub API).
+
+        Uses the branch from config (default main). If pull fails for branch
+        main, retries with origin master.
+
         Args:
             name: Repository name
-        
+
         Returns:
             Dict with status and message
         """
         if name not in self.repos:
             return {"success": False, "message": f"Repository '{name}' not in config"}
-        
+
         repo = self.repos[name]
         repo_path = self.repos_dir / name
-        
+
         if not repo_path.exists():
-            # Auto-clone if not exists
             log.info(f"Repository '{name}' not found, cloning...")
             return self.clone_repo(name)
-        
-        # Ensure upstream remote exists (use same URL as origin if missing)
-        check_remote = self.terminal.execute("git remote get-url upstream", working_dir=repo_path)
-        if not check_remote.success:
-            add_upstream = self.terminal.execute(
-                f"git remote add upstream {repo.url}",
-                working_dir=repo_path,
-            )
-            if not add_upstream.success:
-                error_msg = add_upstream.stderr or add_upstream.error_message
-                log.error(f"Failed to add upstream remote for {name}: {error_msg}")
-                return {
-                    "success": False,
-                    "message": f"Failed to add upstream remote: {error_msg}",
-                }
-            log.info(f"Added upstream remote for {name}")
-        
-        # Sync via fetch upstream and merge (no GitHub API)
+
         branch = repo.branch or "main"
-        fetch_result = self.terminal.execute("git fetch upstream", working_dir=repo_path)
-        if not fetch_result.success:
-            error_msg = fetch_result.stderr or fetch_result.error_message
-            log.error(f"Failed to fetch upstream for {name}: {error_msg}")
-            return {
-                "success": False,
-                "message": f"Failed to fetch upstream: {error_msg}",
-            }
-        merge_result = self.terminal.execute(
-            f"git merge upstream/{branch}",
+        pull_result = self.terminal.execute(
+            f"git pull origin {branch}",
             working_dir=repo_path,
         )
-        if not merge_result.success:
-            # Try master if main doesn't exist
+        if not pull_result.success:
             if branch == "main":
-                merge_result = self.terminal.execute(
-                    "git merge upstream/master",
+                pull_result = self.terminal.execute(
+                    "git pull origin master",
                     working_dir=repo_path,
                 )
-            if not merge_result.success:
-                error_msg = merge_result.stderr or merge_result.error_message
-                log.error(f"Failed to merge upstream for {name}: {error_msg}")
+            if not pull_result.success:
+                error_msg = pull_result.stderr or pull_result.error_message
+                log.error(f"Failed to git pull for {name}: {error_msg}")
                 return {
                     "success": False,
-                    "message": f"Failed to merge upstream: {error_msg}",
+                    "message": f"Failed to git pull: {error_msg}",
                 }
-        
+
         repo.last_sync = datetime.now()
         self._save_config()
         log.info(f"Successfully synced {name}")
         return {
             "success": True,
             "message": f"Synced {name}",
-            "output": merge_result.stdout[:500] if merge_result.stdout else "No changes",
+            "output": pull_result.stdout[:500] if pull_result.stdout else "No changes",
         }
     
     def sync_all(self) -> Dict[str, Any]:

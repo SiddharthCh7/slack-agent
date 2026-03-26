@@ -18,7 +18,7 @@ from agent.nodes.context_builder import build_context
 from agent.nodes.gate_filter import gate_filter
 from agent.nodes.deep_researcher import deep_researcher
 from agent.nodes.solution_provider import solution_provider
-from agent.logger import get_logger
+from agent.utils.logger import get_logger
 
 
 # ---------------------------------------------------------------------------

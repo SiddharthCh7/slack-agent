@@ -3,7 +3,7 @@ repositories:
     url: https://github.com/datazip-inc/olake.git
     branch: master
     enabled: true
-    sync_frequency: daily
+    sync_frequency: hourly
   olake-ui:
     url: https://github.com/datazip-inc/olake-ui.git
     branch: master
@@ -23,4 +23,4 @@ repositories:
     url: https://github.com/datazip-inc/olake-fusion.git
     branch: master
     enabled: true
-    sync_frequency: daily
+    sync_frequency: hourly
